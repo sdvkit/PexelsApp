@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PexelsApp</string>
+    <string name="search">Поиск</string>
+    <string name="try_again">Повторить</string>
+    <string name="no_results_stub">Результатов не найдено</string>
+    <string name="explore">Исследовать</string>
+    <string name="no_connection_data_cached">Нет соединения с интернетом, но данные в кэше</string>
+    <string name="no_connection_no_cache">Нет соединения с интернетом. Нет данных в кэше</string>
+    <string name="download">Скачать</string>
+    <string name="on_success_download_image">Изображение сохранено в галерею</string>
+    <string name="image_not_found_stub">Изображение не найдено</string>
+    <string name="bookmarks">Закладки</string>
+    <string name="not_saved_stub">Вы пока ещё ничего не сохранили</string>
+</resources>

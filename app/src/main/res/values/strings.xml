@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">PexelsApp</string>
+    <string name="search">Search</string>
+    <string name="try_again">Try again</string>
+    <string name="no_results_stub">No results found</string>
+    <string name="explore">Explore</string>
+    <string name="no_connection_data_cached">There is no internet connection, but the data is in the cache</string>
+    <string name="no_connection_no_cache">There is no internet connection. There is no data in the cache</string>
+    <string name="download">Download</string>
+    <string name="on_success_download_image">The image is saved to the gallery</string>
+    <string name="image_not_found_stub">Image not found</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="not_saved_stub">You haven\'t saved anything yet</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="navigationIconBackground" format="reference|color" />
+    <attr name="navigationIconInactiveTint" format="reference|color" />
+    <attr name="noNetworkIconTint" format="reference|color" />
+    <attr name="imagePlaceholderBackground" format="reference|color" />
+    <attr name="imagePlaceholderIconTint" format="reference|color" />
+</resources>

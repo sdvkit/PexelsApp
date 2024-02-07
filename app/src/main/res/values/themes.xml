@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.PexelsApp" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="navigationIconBackground">@color/white</item>
+        <item name="navigationIconInactiveTint">@color/grey86</item>
+        <item name="noNetworkIconTint">@color/black_variant</item>
+        <item name="imagePlaceholderBackground">@color/white_variant</item>
+        <item name="imagePlaceholderIconTint">@color/grey86</item>
+    </style>
+</resources>
