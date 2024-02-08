@@ -35,7 +35,7 @@ class MainActivityViewModel @Inject constructor(
     private val _isDataLoaded = MutableStateFlow(false)
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getFeaturedCollections()
                 .cachedIn(viewModelScope)
                 .shareIn(
@@ -50,7 +50,7 @@ class MainActivityViewModel @Inject constructor(
                 }
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getPhotos()
                 .cachedIn(viewModelScope)
                 .shareIn(
@@ -67,7 +67,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun checkDataIsLoaded(action: (Boolean) -> Unit) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (_dataChannelsCount.value >= 2) {
                 action(_isPhotosInCache.value && _isFeaturedCollectionsInCache.value)
                 _isDataLoaded.value = true

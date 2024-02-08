@@ -9,7 +9,6 @@ import com.sdv.kit.pexelsapp.data.local.PexelsDatabaseClient
 import com.sdv.kit.pexelsapp.data.manager.NetworkManagerImpl
 import com.sdv.kit.pexelsapp.data.remote.PexelsApi
 import com.sdv.kit.pexelsapp.domain.model.FeaturedCollection
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 class FeaturedCollectionRemoteMediator(
@@ -22,8 +21,6 @@ class FeaturedCollectionRemoteMediator(
 
     override suspend fun initialize(): InitializeAction {
         var action: InitializeAction? = null
-        val cacheTimeout = TimeUnit.HOURS.convert(1, TimeUnit.MILLISECONDS)
-        val isCacheExpired = System.currentTimeMillis() - featuredCollectionDao.lastUpdated() >= cacheTimeout
 
         NetworkManagerImpl.checkInternetConnection(
             onSuccess = { action = InitializeAction.LAUNCH_INITIAL_REFRESH },
@@ -42,9 +39,11 @@ class FeaturedCollectionRemoteMediator(
                 LoadType.REFRESH -> {
                     featuredCollectionDao.clearAll()
                 }
+
                 LoadType.PREPEND -> {
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
+
                 LoadType.APPEND -> {
                     val loadKey = state.lastItemOrNull()?.page?.inc() ?: 1
                     val featuredCollectionsResponse = pexelsApi.getFeatured(page = loadKey)

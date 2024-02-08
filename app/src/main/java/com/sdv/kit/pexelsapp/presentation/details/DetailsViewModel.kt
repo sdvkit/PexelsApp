@@ -11,6 +11,7 @@ import com.sdv.kit.pexelsapp.domain.usecase.photo.DownloadPhotoImage
 import com.sdv.kit.pexelsapp.domain.usecase.photo.GetRemotePhotoById
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class DetailsViewModel @Inject constructor(
         if (!_state.value.isPhotoLoading) {
             _state.value = _state.value.copy(isPhotoLoading = true)
 
-            viewModelScope.launch(photoExceptionHandler) {
+            viewModelScope.launch(Dispatchers.IO + photoExceptionHandler) {
                 val bookmarked = getBookmarkedByIdUsecase(photoId = photoId) ?: return@launch
                 _state.value = _state.value.copy(
                     photo = bookmarked.photo,
@@ -53,9 +54,10 @@ class DetailsViewModel @Inject constructor(
         if (!_state.value.isPhotoLoading) {
             _state.value = _state.value.copy(isPhotoLoading = true)
 
-            viewModelScope.launch(photoExceptionHandler) {
+            viewModelScope.launch(Dispatchers.IO + photoExceptionHandler) {
                 val photo = getRemotePhotoByIdUsecase(photoId = photoId) ?: throw RuntimeException()
                 val isBookmarked = getBookmarkedByIdUsecase(photoId = photoId)?.value ?: false
+
                 _state.value = _state.value.copy(
                     photo = photo,
                     isBookmarked = isBookmarked,
@@ -79,7 +81,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun updatePhoto(photo: Photo?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (photo != null) {
                 val photoId = photo.photoId
                 val isBookmarked = _state.value.isBookmarked
