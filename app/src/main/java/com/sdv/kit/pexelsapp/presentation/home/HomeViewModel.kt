@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,21 +32,19 @@ class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeState> = _state
 
     fun checkIfCachePresents() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val isPhotoPresents = checkIfPhotoInCacheUsecase()
-                val isCollectionPresents = checkIfCollectionsInCacheUsecase()
+        viewModelScope.launch(Dispatchers.IO) {
+            val isPhotoPresents = checkIfPhotoInCacheUsecase()
+            val isCollectionPresents = checkIfCollectionsInCacheUsecase()
 
-                _state.value = _state.value.copy(
-                    isCachePresents = isPhotoPresents || isCollectionPresents,
-                    isCacheLoading = false
-                )
-            }
+            _state.value = _state.value.copy(
+                isCachePresents = isPhotoPresents || isCollectionPresents,
+                isCacheLoading = false
+            )
         }
     }
 
     fun getFeaturedCollections() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val featuredCollections = getFeaturedCollectionsFromUsecase()
                 .cachedIn(viewModelScope)
                 .shareIn(
@@ -60,7 +57,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getPhotos() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val photos = when (_state.value.searchQuery.isBlank()) {
                 true -> {
                     getPhotosFromUsecase()
@@ -97,7 +94,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getPhotosDelayed() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (!_state.value.isPhotosRequestHandling) {
                 _state.value = _state.value.copy(isPhotosRequestHandling = true)
                 delay(6_000)
