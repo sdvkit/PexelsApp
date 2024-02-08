@@ -9,7 +9,6 @@ import com.sdv.kit.pexelsapp.data.local.PexelsDatabaseClient
 import com.sdv.kit.pexelsapp.data.manager.NetworkManagerImpl
 import com.sdv.kit.pexelsapp.data.remote.PexelsApi
 import com.sdv.kit.pexelsapp.domain.model.Photo
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 class PhotoRemoteMediator(
@@ -22,7 +21,6 @@ class PhotoRemoteMediator(
 
     override suspend fun initialize(): InitializeAction {
         var action: InitializeAction? = null
-        val cacheTimeout = TimeUnit.HOURS.convert(1, TimeUnit.MILLISECONDS)
 
         NetworkManagerImpl.checkInternetConnection(
             onSuccess = { action = InitializeAction.LAUNCH_INITIAL_REFRESH },
@@ -41,9 +39,11 @@ class PhotoRemoteMediator(
                 LoadType.REFRESH -> {
                     photoDao.clearAll()
                 }
+
                 LoadType.PREPEND -> {
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
+
                 LoadType.APPEND -> {
                     val loadKey = state.lastItemOrNull()?.page?.inc() ?: 1
                     val photoResponse = pexelsApi.getCurated(page = loadKey)
