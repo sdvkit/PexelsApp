@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.net.UnknownHostException
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
@@ -33,10 +32,7 @@ class DetailsViewModel @Inject constructor(
 
     private val photoExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
-
-        if (throwable is UnknownHostException) {
-            _state.value = _state.value.copy(photo = null)
-        }
+        _state.value = _state.value.copy(photo = null)
     }
 
     fun getCachedPhotoInfo(photoId: Int) {
