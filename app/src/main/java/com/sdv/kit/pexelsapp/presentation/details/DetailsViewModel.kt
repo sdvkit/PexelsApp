@@ -29,7 +29,8 @@ class DetailsViewModel @Inject constructor(
     private val _state = MutableStateFlow(DetailsState())
     val state: StateFlow<DetailsState> = _state
 
-    private val photoExceptionHandler = CoroutineExceptionHandler { _, _ ->
+    private val photoExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        throwable.printStackTrace()
         _state.value = _state.value.copy(photo = null)
     }
 
