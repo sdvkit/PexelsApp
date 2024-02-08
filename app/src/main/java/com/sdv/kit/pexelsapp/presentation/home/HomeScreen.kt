@@ -115,8 +115,10 @@ fun HomeScreen(
         shouldResendPhotosRequest = shouldResendPhotosRequest
     )
 
-    shouldShowLoadingProgress.value = isCollectionsLoading.value || isPhotosLoading.value || isPhotoImageLoading.value
-    shouldShowNoResultsStub.value = !shouldShowNetworkStub.value && !isPhotosLoading.value && photos.itemCount == 0
+    shouldShowLoadingProgress.value =
+        isCollectionsLoading.value || isPhotosLoading.value || isPhotoImageLoading.value
+    shouldShowNoResultsStub.value =
+        !shouldShowNetworkStub.value && !isPhotosLoading.value && photos.itemCount == 0
 
     if (networkStatusToastsCount.intValue == 1) {
         var toastMessage = ""
@@ -213,24 +215,27 @@ private fun HomeScreenContent(
                 },
                 onValueChange = { newSearchValue ->
                     if (selectedFeaturedCollectionIndex.intValue != Constants.EMPTY_COLLECTION_HEADER_INDEX) {
-                        val collectionHeader = "${collections[selectedFeaturedCollectionIndex.intValue]!!.title} "
+                        val collectionHeader =
+                            "${collections[selectedFeaturedCollectionIndex.intValue]!!.title} "
 
                         if (!newSearchValue.text.contains(collectionHeader)) {
-                            selectedFeaturedCollectionIndex.intValue = Constants.EMPTY_COLLECTION_HEADER_INDEX
+                            selectedFeaturedCollectionIndex.intValue =
+                                Constants.EMPTY_COLLECTION_HEADER_INDEX
                         }
                     }
 
-                searchJob.value?.cancel()
-                searchJob.value = coroutineScope.launch {
-                    delay(Constants.USER_FRIENDLY_SEARCH_INTERVAL)
-                    onSearch(newSearchValue.text)
-                }
+                    searchJob.value?.cancel()
+                    searchJob.value = coroutineScope.launch {
+                        delay(Constants.USER_FRIENDLY_SEARCH_INTERVAL)
+                        onSearch(newSearchValue.text)
+                    }
 
                     searchValue.value = newSearchValue
                 },
                 onClear = {
                     searchValue.value = searchValue.value.copy(text = "")
-                    selectedFeaturedCollectionIndex.intValue = Constants.EMPTY_COLLECTION_HEADER_INDEX
+                    selectedFeaturedCollectionIndex.intValue =
+                        Constants.EMPTY_COLLECTION_HEADER_INDEX
                     onSearch(searchValue.value.text)
                 }
             )
