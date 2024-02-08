@@ -31,7 +31,11 @@ class DetailsViewModel @Inject constructor(
 
     private val photoExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
-        _state.value = _state.value.copy(photo = null)
+        _state.value = _state.value.copy(
+            photo = null,
+            isPhotoLoading = false,
+            photoError = throwable
+        )
     }
 
     fun getCachedPhotoInfo(photoId: Int) {
@@ -43,7 +47,8 @@ class DetailsViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     photo = bookmarked.photo,
                     isBookmarked = bookmarked.value,
-                    isPhotoLoading = false
+                    isPhotoLoading = false,
+                    photoError = null
                 )
             }
         }
@@ -60,7 +65,8 @@ class DetailsViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     photo = photo,
                     isBookmarked = isBookmarked,
-                    isPhotoLoading = false
+                    isPhotoLoading = false,
+                    photoError = null
                 )
             }
         }
@@ -79,24 +85,25 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun updatePhoto(photo: Photo?) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (photo != null) {
-                val photoId = photo.photoId
-                val isBookmarked = _state.value.isBookmarked
+        viewModelScope.launch(photoExceptionHandler + Dispatchers.IO) {
+            val photoId = photo!!.photoId
+            val isBookmarked = _state.value.isBookmarked
 
-                val bookmarked = getBookmarkedByIdUsecase(photoId = photoId)
-                    ?: Bookmarked(
-                        photoId = photoId,
-                        value = !isBookmarked,
-                        photo = photo,
-                        page = getNextBookmarkedPageUsecase()
-                    )
+            val bookmarked = getBookmarkedByIdUsecase(photoId = photoId)
+                ?: Bookmarked(
+                    photoId = photoId,
+                    value = !isBookmarked,
+                    photo = photo,
+                    page = getNextBookmarkedPageUsecase()
+                )
 
-                bookmarked.value = !isBookmarked
+            bookmarked.value = !isBookmarked
 
-                updateBookmarkedUsecase(bookmarked = bookmarked)
-                _state.value = _state.value.copy(isBookmarked = !isBookmarked)
-            }
+            updateBookmarkedUsecase(bookmarked = bookmarked)
+            _state.value = _state.value.copy(
+                isBookmarked = !isBookmarked,
+                photoError = null
+            )
         }
     }
 }
