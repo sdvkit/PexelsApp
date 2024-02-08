@@ -86,7 +86,7 @@ class DetailsViewModel @Inject constructor(
 
     fun updatePhoto(photo: Photo?) {
         viewModelScope.launch(photoExceptionHandler + Dispatchers.IO) {
-            val photoId = photo!!.photoId
+            val photoId = photo?.photoId ?: return@launch
             val isBookmarked = _state.value.isBookmarked
 
             val bookmarked = getBookmarkedByIdUsecase(photoId = photoId)
