@@ -71,15 +71,16 @@ fun NavGraphBuilder.homeNavGraph(
             viewModel.getPhotos()
         }
 
-        val collections = state.collections ?: flow { PagingData.empty<FeaturedCollection>() }
-        val photos = state.photos ?: flow { PagingData.empty<Photo>() }
+        val pagingCollectionItems = (state.collections ?: flow { PagingData.empty<FeaturedCollection>() }).collectAsLazyPagingItems()
+        val pagingPhotoItems = (state.photos ?: flow { PagingData.empty<Photo>() }).collectAsLazyPagingItems()
         val searchQuery = state.searchQuery
         val isCachePresents = state.isCachePresents
         val isCacheLoading = state.isCacheLoading
         val selectedFeaturedCollectionIndex = state.selectedFeaturedCollectionIndex
 
         val searchQueryArg = backStackEntry.arguments?.getString(NavRoute.SEARCH_QUERY_ARG)
-        val selectedCollectionArg = backStackEntry.arguments?.getInt(NavRoute.SELECTED_COLLECTION_ARG)
+        val selectedCollectionArg =
+            backStackEntry.arguments?.getInt(NavRoute.SELECTED_COLLECTION_ARG)
 
         if (!state.isArgsUsed) {
             viewModel.useArguments(
@@ -109,8 +110,8 @@ fun NavGraphBuilder.homeNavGraph(
             isInternetConnected = isInternetConnected.value,
             isInternetWasDisconnected = isInternetWasDisconnected,
             networkStatusToastsCount = networkStatusToastsCount,
-            collections = collections.collectAsLazyPagingItems(),
-            photos = photos.collectAsLazyPagingItems(),
+            collections = pagingCollectionItems,
+            photos = pagingPhotoItems,
             selectedFeaturedCollectionIndex = selectedFeaturedCollectionIndex,
             searchQuery = searchQuery,
             onSearch = { query ->

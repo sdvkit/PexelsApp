@@ -1,5 +1,6 @@
 package com.sdv.kit.pexelsapp.presentation.details
 
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +34,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import com.sdv.kit.pexelsapp.domain.model.Photo
 import com.sdv.kit.pexelsapp.domain.model.PhotoSrc
 import com.sdv.kit.pexelsapp.presentation.Dimens
@@ -47,6 +50,7 @@ import com.sdv.kit.pexelsapp.presentation.ui.theme.AppTheme
 fun DetailsScreen(
     modifier: Modifier = Modifier,
     photo: Photo?,
+    photoError: Throwable?,
     isPhotoLoading: Boolean,
     onExplorePhotos: () -> Unit,
     onBackButtonClicked: () -> Unit,
@@ -54,6 +58,7 @@ fun DetailsScreen(
     onBookmarkButtonClicked: () -> Unit,
     isBookmarkButtonActive: Boolean
 ) {
+    val context = LocalContext.current
     val isInternetConnection = networkConnectionStatus()
 
     val isPhotoImageLoading = remember { mutableStateOf(true) }
@@ -62,7 +67,13 @@ fun DetailsScreen(
 
     isPhotoImageLoading.value = isPhotoLoading
     shouldShowImageNotFoundStub =
-        (!isPhotoImageLoading.value || !isInternetConnection.value) && photo == null
+        (!isPhotoImageLoading.value || !isInternetConnection.value || photoError != null) && photo == null
+
+    LaunchedEffect(photoError) {
+        if (photoError != null) {
+            Toast.makeText(context, photoError.message, Toast.LENGTH_LONG).show()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -79,7 +90,7 @@ fun DetailsScreen(
             authorName = authorName
         )
 
-        if (isPhotoImageLoading.value && !shouldShowImageNotFoundStub) {
+        if (isPhotoImageLoading.value && !shouldShowImageNotFoundStub && photoError == null) {
             Spacer(modifier = Modifier.height(Dimens.PADDING_SMALL))
             LinearProgressIndicator(
                 modifier = Modifier
@@ -190,7 +201,8 @@ fun DetailsScreenPreview() {
                 photographer = "Nikita Sudaev",
                 src = PhotoSrc(original = "https://images.pexels.com/photos/19797263/pexels-photo-19797263.jpeg"),
                 alt = "Something"
-            )
+            ),
+            photoError = null
         )
     }
 }

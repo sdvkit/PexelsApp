@@ -106,7 +106,7 @@ fun HomeScreen(
     )
 
     shouldShowLoadingProgress.value = isCollectionsLoading.value || isPhotosLoading.value || isPhotoImageLoading.value
-    shouldShowNoResultsStub.value = !shouldShowNetworkStub.value && !isPhotosLoading.value && photos.itemCount == 0 && searchValue.value.text.isNotBlank()
+    shouldShowNoResultsStub.value = !shouldShowNetworkStub.value && !isPhotosLoading.value && photos.itemCount == 0
 
     if (networkStatusToastsCount.intValue == 1) {
         var toastMessage = ""
@@ -115,6 +115,7 @@ fun HomeScreen(
             true -> {
                 toastMessage = stringResource(R.string.no_connection_data_cached)
             }
+
             false -> {
                 shouldShowNetworkStub.value = true
                 toastMessage = stringResource(R.string.no_connection_no_cache)
@@ -134,7 +135,7 @@ fun HomeScreen(
 
         shouldShowNetworkStub.value = false
         isInternetWasDisconnected.value = false
-        networkStatusToastsCount.intValue= 0
+        networkStatusToastsCount.intValue = 0
     }
 
     if (isHttpError.value) {
@@ -193,10 +194,12 @@ private fun HomeScreenContent(
             },
             onValueChange = { newSearchValue ->
                 if (selectedFeaturedCollectionIndex.intValue != Constants.EMPTY_COLLECTION_HEADER_INDEX) {
-                    val collectionHeader = "${collections[selectedFeaturedCollectionIndex.intValue]!!.title} "
+                    val collectionHeader =
+                        "${collections[selectedFeaturedCollectionIndex.intValue]!!.title} "
 
                     if (!newSearchValue.text.contains(collectionHeader)) {
-                        selectedFeaturedCollectionIndex.intValue = Constants.EMPTY_COLLECTION_HEADER_INDEX
+                        selectedFeaturedCollectionIndex.intValue =
+                            Constants.EMPTY_COLLECTION_HEADER_INDEX
                     }
                 }
 
@@ -224,17 +227,24 @@ private fun HomeScreenContent(
                 collections = collections,
                 selectedItemIndex = selectedFeaturedCollectionIndex.intValue,
                 onActiveItemClicked = { featuredCollection ->
-                    val newSearchValue = searchValue.value.text.replace("${featuredCollection.title} ", "")
+                    val newSearchValue =
+                        searchValue.value.text.replace("${featuredCollection.title} ", "")
                     searchValue.value = searchValue.value.copy(
                         text = newSearchValue,
                         selection = TextRange(newSearchValue.length)
                     )
-                    selectedFeaturedCollectionIndex.intValue = Constants.EMPTY_COLLECTION_HEADER_INDEX
+                    selectedFeaturedCollectionIndex.intValue =
+                        Constants.EMPTY_COLLECTION_HEADER_INDEX
                     onSearch(searchValue.value.text)
                 },
                 onAnyItemClicked = { index ->
                     if (selectedFeaturedCollectionIndex.intValue != Constants.EMPTY_COLLECTION_HEADER_INDEX) {
-                        val newSearchValue = searchValue.value.text.replace("${collections[selectedFeaturedCollectionIndex.intValue]!!.title} ", "")
+                        val clickedCollection =
+                            collections[selectedFeaturedCollectionIndex.intValue]
+                                ?: return@FeaturedSection
+                        val newSearchValue =
+                            searchValue.value.text.replace("${clickedCollection.title} ", "")
+
                         searchValue.value = searchValue.value.copy(
                             text = newSearchValue,
                             selection = TextRange.Zero
@@ -411,7 +421,8 @@ fun HomeScreenPreview() {
             PagingData.empty()
         ).collectAsLazyPagingItems()
 
-        val selectedFeaturedCollectionIndex = remember { mutableIntStateOf(Constants.EMPTY_COLLECTION_HEADER_INDEX) }
+        val selectedFeaturedCollectionIndex =
+            remember { mutableIntStateOf(Constants.EMPTY_COLLECTION_HEADER_INDEX) }
         val isInternetWasDisconnected = remember { mutableStateOf(true) }
         val networkStatusToastsCount = remember { mutableIntStateOf(0) }
 

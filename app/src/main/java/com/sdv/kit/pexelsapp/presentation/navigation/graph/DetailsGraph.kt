@@ -104,12 +104,14 @@ fun NavGraphBuilder.detailsGraph(
         val photo = state.photo
         val isBookmarked = state.isBookmarked
         val isPhotoLoading = state.isPhotoLoading
+        val photoError = state.photoError
 
         if (photoId != null && photo == null && !isPhotoLoading) {
             when (screenFrom) {
                 NavRoute.HomeScreen.route -> {
                     viewModel.getRemotePhotoInfo(photoId = photoId)
                 }
+
                 NavRoute.BookmarksScreen.route -> {
                     viewModel.getCachedPhotoInfo(photoId = photoId)
                 }
@@ -122,9 +124,10 @@ fun NavGraphBuilder.detailsGraph(
                 if (isGranted) {
                     viewModel.downloadPhotoImage(
                         photo = photo!!,
-                        onError = {  exception ->
+                        onError = { exception ->
                             coroutineScope.launch {
-                                Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, exception.message, Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                     )
@@ -142,6 +145,7 @@ fun NavGraphBuilder.detailsGraph(
                 )
             },
             photo = photo,
+            photoError = photoError,
             isPhotoLoading = isPhotoLoading,
             onExplorePhotos = {
                 navController.navigate(route = NavRoute.HomeScreen.route)
@@ -152,9 +156,10 @@ fun NavGraphBuilder.detailsGraph(
                     onGranted = {
                         viewModel.downloadPhotoImage(
                             photo = photo!!,
-                            onError = {  exception ->
+                            onError = { exception ->
                                 coroutineScope.launch {
-                                    Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, exception.message, Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }
                         )
@@ -182,6 +187,7 @@ private fun checkPermission(
                     context,
                     Manifest.permission.READ_MEDIA_IMAGES
                 ) -> onGranted()
+
                 else -> launcher.launch(Manifest.permission.READ_MEDIA_IMAGES)
             }
         }
@@ -192,6 +198,7 @@ private fun checkPermission(
                     context,
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 ) -> onGranted()
+
                 else -> launcher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
         }
@@ -202,6 +209,7 @@ private fun checkPermission(
                     context,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) -> onGranted()
+
                 else -> launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
         }
