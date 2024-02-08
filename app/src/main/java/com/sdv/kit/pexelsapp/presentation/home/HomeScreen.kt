@@ -205,10 +205,8 @@ private fun HomeScreenContent(
 
                 searchJob.value?.cancel()
                 searchJob.value = coroutineScope.launch {
-                    if (searchValue.value.text != newSearchValue.text) {
-                        delay(Constants.USER_FRIENDLY_SEARCH_INTERVAL)
-                        onSearch(newSearchValue.text)
-                    }
+                    delay(Constants.USER_FRIENDLY_SEARCH_INTERVAL)
+                    onSearch(newSearchValue.text)
                 }
 
                 searchValue.value = newSearchValue
