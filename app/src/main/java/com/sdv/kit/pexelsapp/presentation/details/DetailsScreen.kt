@@ -2,8 +2,10 @@ package com.sdv.kit.pexelsapp.presentation.details
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -26,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import com.sdv.kit.pexelsapp.domain.model.Photo
@@ -57,7 +61,8 @@ fun DetailsScreen(
     val authorName = photo?.photographer ?: ""
 
     isPhotoImageLoading.value = isPhotoLoading
-    shouldShowImageNotFoundStub = (!isPhotoImageLoading.value || !isInternetConnection.value) && photo == null
+    shouldShowImageNotFoundStub =
+        (!isPhotoImageLoading.value || !isInternetConnection.value) && photo == null
 
     Column(
         modifier = modifier
@@ -100,6 +105,7 @@ fun DetailsScreen(
             photo != null -> {
                 Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM_BIGGER))
                 BoxWithConstraints {
+                    var isPinchEnabled by remember { mutableStateOf(true) }
                     var scale by remember { mutableFloatStateOf(1f) }
                     val animatedScale by animateFloatAsState(targetValue = scale, label = "Scale")
                     var offset by remember { mutableStateOf(Offset.Zero) }
@@ -117,6 +123,10 @@ fun DetailsScreen(
                             x = (offset.x + scale * panChange.x).coerceIn(-maxX, maxX),
                             y = (offset.y + scale * panChange.y).coerceIn(-maxY, maxY),
                         )
+
+                        if (zoomChange == 1f && scale == 1f && offset == Offset.Zero) {
+                            isPinchEnabled = false
+                        }
                     }
 
                     DisposableEffect(state.isTransformInProgress) {
@@ -135,11 +145,16 @@ fun DetailsScreen(
                                 scaleY = animatedScale
                                 translationX = offset.x
                             }
-                            .transformable(state),
+                            .transformable(state = state, enabled = isPinchEnabled)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = rememberRipple(color = Color.Transparent)
+                            ) {
+                                isPinchEnabled = true
+                            },
                         contentScale = ContentScale.Fit,
                         photo = photo,
-                        isPhotoLoading = isPhotoImageLoading,
-                        onClick = { }
+                        isPhotoLoading = isPhotoImageLoading
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
