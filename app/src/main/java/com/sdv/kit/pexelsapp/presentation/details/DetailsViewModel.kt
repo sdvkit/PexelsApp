@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
 import javax.inject.Inject
 
 @HiltViewModel
@@ -67,12 +66,11 @@ class DetailsViewModel @Inject constructor(
         }
     }
 
-    // todo fix creating thread
     fun downloadPhotoImage(
         photo: Photo,
         onError: (Exception) -> Unit
     ) {
-        Executors.newSingleThreadExecutor().execute {
+        viewModelScope.launch(Dispatchers.IO) {
             downloadPhotoImageUsecase(
                 photo = photo,
                 onError = onError
