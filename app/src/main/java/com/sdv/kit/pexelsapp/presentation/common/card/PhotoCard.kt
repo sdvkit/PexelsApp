@@ -1,16 +1,12 @@
 package com.sdv.kit.pexelsapp.presentation.common.card
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
@@ -26,19 +22,13 @@ fun PhotoCard(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
     photo: Photo,
-    isPhotoLoading: MutableState<Boolean>,
-    onClick: (Photo) -> Unit
+    isPhotoLoading: MutableState<Boolean>
 ) {
     val placeholder = painterResource(R.drawable.img_placeholder)
     val imageUrl = photo.src.original
 
     AsyncImage(
-        modifier = modifier.clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(color = Color.Transparent)
-        ) {
-            onClick(photo)
-        },
+        modifier = modifier,
         onSuccess = {
             isPhotoLoading.value = false
         },
@@ -72,7 +62,6 @@ fun PhotoCardPreview() {
                     src = PhotoSrc(original = "https://images.pexels.com/photos/19797263/pexels-photo-19797263.jpeg"),
                     alt = "Something"
                 ),
-                onClick = { },
                 isPhotoLoading = remember {
                     mutableStateOf(false)
                 }
@@ -96,7 +85,6 @@ fun PhotoCardLoadingPreview() {
                     src = PhotoSrc(original = "https://images.pexels.com/photos/19797263/pexels-photo-19797263.jpeg"),
                     alt = "Something"
                 ),
-                onClick = { },
                 isPhotoLoading = remember {
                     mutableStateOf(true)
                 }
