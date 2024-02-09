@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.sdv.kit.pexelsapp.presentation.navigation.NavGraph
 import com.sdv.kit.pexelsapp.presentation.navigation.NavRoute
-import com.sdv.kit.pexelsapp.presentation.networkConnectionStatus
 import com.sdv.kit.pexelsapp.presentation.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,24 +20,11 @@ class MainActivity : ComponentActivity() {
 
         installSplashScreen().apply {
             setKeepOnScreenCondition(condition = {
-                var keepOnSplashScreen = true
-                val isInternetConnected = viewModel.isInternetConnected.value
-
-                viewModel.checkDataIsLoaded { isLoaded ->
-                    keepOnSplashScreen = when (isLoaded) {
-                        true -> false
-                        else -> isInternetConnected
-                    }
-                }
-
-                keepOnSplashScreen
+                viewModel.keepOnSplashScreen.value
             })
         }
 
         setContent {
-            val isInternetConnected = networkConnectionStatus().value
-            viewModel.setInternetConnected(isConnected = isInternetConnected)
-
             AppTheme {
                 NavGraph(startDestination = NavRoute.HomeScreen)
             }
