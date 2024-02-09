@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.sdv.kit.pexelsapp.domain.usecase.featured.CheckIfCollectionsInCache
-import com.sdv.kit.pexelsapp.domain.usecase.featured.GetFeaturedCollections
+import com.sdv.kit.pexelsapp.domain.usecase.featured.GetPagedFeaturedCollections
 import com.sdv.kit.pexelsapp.domain.usecase.photo.CheckIfPhotosInCache
-import com.sdv.kit.pexelsapp.domain.usecase.photo.GetPhotos
+import com.sdv.kit.pexelsapp.domain.usecase.photo.GetPagedPhotos
 import com.sdv.kit.pexelsapp.domain.usecase.photo.SearchPhotos
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -21,8 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getFeaturedCollectionsFromUsecase: GetFeaturedCollections,
-    private val getPhotosFromUsecase: GetPhotos,
+    private val getPagedFeaturedCollectionsFromUsecase: GetPagedFeaturedCollections,
+    private val getPagedPhotosFromUsecase: GetPagedPhotos,
     private val searchPhotosUsecase: SearchPhotos,
     private val checkIfPhotoInCacheUsecase: CheckIfPhotosInCache,
     private val checkIfCollectionsInCacheUsecase: CheckIfCollectionsInCache
@@ -45,7 +45,7 @@ class HomeViewModel @Inject constructor(
 
     fun getFeaturedCollections() {
         viewModelScope.launch(Dispatchers.IO) {
-            val featuredCollections = getFeaturedCollectionsFromUsecase()
+            val featuredCollections = getPagedFeaturedCollectionsFromUsecase()
                 .cachedIn(viewModelScope)
                 .shareIn(
                     scope = CoroutineScope(Dispatchers.IO),
@@ -60,7 +60,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val photos = when (_state.value.searchQuery.isBlank()) {
                 true -> {
-                    getPhotosFromUsecase()
+                    getPagedPhotosFromUsecase()
                         .cachedIn(viewModelScope)
                         .shareIn(
                             scope = CoroutineScope(Dispatchers.IO),
