@@ -5,10 +5,12 @@ import com.sdv.kit.pexelsapp.domain.model.Photo
 import kotlinx.coroutines.flow.Flow
 
 interface PhotoRepository {
-    fun getPhotos(): Flow<PagingData<Photo>>
+    fun getPagedPhotos(): Flow<PagingData<Photo>>
+    suspend fun getPhotos(page: Int): List<Photo>
     fun checkIfPhotosInCache(): Boolean
     fun searchPhotos(query: String): Flow<PagingData<Photo>>
     suspend fun getCachedPhotoById(photoId: Int): Photo
     suspend fun getRemotePhotoById(photoId: Int): Photo?
     suspend fun cachePhoto(photo: Photo)
+    suspend fun cachePhotos(photos: List<Photo>)
 }
