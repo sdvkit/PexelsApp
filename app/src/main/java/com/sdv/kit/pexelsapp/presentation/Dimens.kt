@@ -28,8 +28,7 @@ object Dimens {
     val PHOTO_AUTHOR_SECTION_MIN_HEIGHT = 33.dp
 
     val NO_NETWORK_STUB_HEIGHT = 147.dp
-
-    val NO_NETWORK_STUB_WIDTH = 125.54.dp
+    val NO_NETWORK_STUB_WIDTH = 250.dp
     val BACK_BUTTON_SIZE = 40.dp
 
     val BACK_BUTTON_ICON_SIZE = 20.dp
