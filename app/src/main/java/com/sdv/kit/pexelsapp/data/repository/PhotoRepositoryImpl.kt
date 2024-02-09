@@ -21,8 +21,12 @@ class PhotoRepositoryImpl @Inject constructor(
 
     private val photoDao = pexelsDatabaseClient.photoDao()
 
-    override fun getPhotos(): Flow<PagingData<Photo>> {
+    override fun getPagedPhotos(): Flow<PagingData<Photo>> {
         return photoPager.flow
+    }
+
+    override suspend fun getPhotos(page: Int): List<Photo> {
+        return pexelsApi.getCurated(page = page).photos
     }
 
     override fun checkIfPhotosInCache(): Boolean {
@@ -54,5 +58,9 @@ class PhotoRepositoryImpl @Inject constructor(
 
     override suspend fun cachePhoto(photo: Photo) {
         photoDao.insertAll(photo)
+    }
+
+    override suspend fun cachePhotos(photos: List<Photo>) {
+        photoDao.insertAll(*photos.toTypedArray())
     }
 }

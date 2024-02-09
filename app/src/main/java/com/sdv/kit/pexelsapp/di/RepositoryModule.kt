@@ -25,10 +25,12 @@ class RepositoryModule {
     @Singleton
     fun provideFeaturedCollectionRepository(
         featuredCollectionPager: Pager<Int, FeaturedCollection>,
-        pexelsDatabaseClient: PexelsDatabaseClient
+        pexelsDatabaseClient: PexelsDatabaseClient,
+        pexelsApi: PexelsApi
     ): FeaturedCollectionRepository = FeaturedCollectionRepositoryImpl(
         featuredCollectionPager = featuredCollectionPager,
-        featuredCollectionDao = pexelsDatabaseClient.featuredCollectionDao()
+        featuredCollectionDao = pexelsDatabaseClient.featuredCollectionDao(),
+        pexelsApi = pexelsApi
     )
 
     @Provides

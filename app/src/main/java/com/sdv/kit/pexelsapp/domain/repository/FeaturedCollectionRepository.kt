@@ -5,6 +5,8 @@ import com.sdv.kit.pexelsapp.domain.model.FeaturedCollection
 import kotlinx.coroutines.flow.Flow
 
 interface FeaturedCollectionRepository {
-    fun getFeaturedCollections(): Flow<PagingData<FeaturedCollection>>
+    fun getPagedFeaturedCollections(): Flow<PagingData<FeaturedCollection>>
+    suspend fun getFeaturedCollections(page: Int): List<FeaturedCollection>
     fun checkIfCollectionsInCache(): Boolean
+    suspend fun cacheFeaturedCollections(collections: List<FeaturedCollection>)
 }
