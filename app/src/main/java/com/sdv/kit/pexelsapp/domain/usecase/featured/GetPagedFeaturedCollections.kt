@@ -6,11 +6,11 @@ import com.sdv.kit.pexelsapp.domain.repository.FeaturedCollectionRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetFeaturedCollections @Inject constructor(
+class GetPagedFeaturedCollections @Inject constructor(
     private val featuredCollectionRepository: FeaturedCollectionRepository
 ) {
 
     operator fun invoke(): Flow<PagingData<FeaturedCollection>> {
-        return featuredCollectionRepository.getFeaturedCollections()
+        return featuredCollectionRepository.getPagedFeaturedCollections()
     }
 }
