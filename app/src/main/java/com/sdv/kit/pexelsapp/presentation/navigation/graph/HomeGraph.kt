@@ -64,6 +64,7 @@ fun NavGraphBuilder.homeNavGraph(
 
         val viewModel: HomeViewModel = hiltViewModel()
         val state by viewModel.state.collectAsState()
+        val signedInUserDetails by viewModel.userDetails
 
         LaunchedEffect(Unit) {
             viewModel.checkIfCachePresents()
@@ -103,6 +104,7 @@ fun NavGraphBuilder.homeNavGraph(
 
         HomeScreen(
             modifier = Modifier.fillMaxSize(),
+            signedInUserDetails = signedInUserDetails ?: return@composable,
             onCacheRequest = {
                 viewModel.checkIfCachePresents()
                 isCachePresents
@@ -143,6 +145,9 @@ fun NavGraphBuilder.homeNavGraph(
             },
             onTryAgainRequest = {
                 viewModel.getPhotos()
+            },
+            onUserAvatarClicked = {
+                navController.navigate(route = NavRoute.ProfileScreen.route)
             }
         )
     }
