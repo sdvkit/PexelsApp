@@ -18,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -78,12 +77,11 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getStartDestination() {
+    private fun getStartDestination() {
         _startDestination.value = when (Firebase.auth.currentUser == null) {
             true -> NavRoute.LoginScreen
             else -> NavRoute.HomeScreen
         }
-        delay(300)
         _keepOnSplashScreen.value = false
     }
 }
