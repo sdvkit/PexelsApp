@@ -18,4 +18,6 @@
     <string name="logout">Выйти</string>
     <string name="profile">Профиль</string>
     <string name="none">Нет</string>
+    <string name="login_launch_error">Не удалось запустить процесс логина</string>
+    <string name="sign_in_error">Не удалось залогиниться</string>
 </resources>

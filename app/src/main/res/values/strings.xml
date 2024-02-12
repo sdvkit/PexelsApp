@@ -18,4 +18,6 @@
     <string name="logout">Logout</string>
     <string name="profile">Profile</string>
     <string name="none">None</string>
+    <string name="login_launch_error">Can\'t launch Sign in process</string>
+    <string name="sign_in_error">Can\'t Sign in</string>
 </resources>
