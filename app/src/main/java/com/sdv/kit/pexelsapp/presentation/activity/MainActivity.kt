@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.sdv.kit.pexelsapp.presentation.navigation.NavGraph
-import com.sdv.kit.pexelsapp.presentation.navigation.NavRoute
 import com.sdv.kit.pexelsapp.presentation.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,7 +25,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AppTheme {
-                NavGraph(startDestination = NavRoute.HomeScreen)
+                NavGraph(startDestination = viewModel.startDestination.value)
             }
         }
     }
