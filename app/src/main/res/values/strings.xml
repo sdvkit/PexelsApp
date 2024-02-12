@@ -12,4 +12,10 @@
     <string name="image_not_found_stub">Image not found</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="not_saved_stub">You haven\'t saved anything yet</string>
+    <string name="login">Login</string>
+    <string name="google_sign_in">Sign in with google</string>
+    <string name="login_description">Please, sign in to Pexels via Google</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="none">None</string>
 </resources>

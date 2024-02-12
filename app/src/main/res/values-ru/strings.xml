@@ -12,4 +12,10 @@
     <string name="image_not_found_stub">Изображение не найдено</string>
     <string name="bookmarks">Закладки</string>
     <string name="not_saved_stub">Вы пока ещё ничего не сохранили</string>
+    <string name="login">Войдите</string>
+    <string name="google_sign_in">Войти с Google</string>
+    <string name="login_description">Пожалуйста, войдите в Pexels при помощи Google</string>
+    <string name="logout">Выйти</string>
+    <string name="profile">Профиль</string>
+    <string name="none">Нет</string>
 </resources>
