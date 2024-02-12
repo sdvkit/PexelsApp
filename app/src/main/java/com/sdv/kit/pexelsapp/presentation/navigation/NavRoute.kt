@@ -2,9 +2,13 @@ package com.sdv.kit.pexelsapp.presentation.navigation
 
 sealed class NavRoute(val route: String) {
 
+    data object LoginScreen : NavRoute(route = "login_screen")
+
     data object HomeScreen : NavRoute(route = "home_screen")
 
     data object BookmarksScreen : NavRoute(route = "bookmarks_screen")
+
+    data object ProfileScreen : NavRoute(route = "profile_screen")
 
     data class DetailsScreen(
         private val screenFrom: String,

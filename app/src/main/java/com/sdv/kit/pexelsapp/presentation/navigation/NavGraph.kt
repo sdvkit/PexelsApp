@@ -18,6 +18,8 @@ import com.sdv.kit.pexelsapp.presentation.common.BottomNavigationBar
 import com.sdv.kit.pexelsapp.presentation.navigation.graph.bookmarksNavGraph
 import com.sdv.kit.pexelsapp.presentation.navigation.graph.detailsGraph
 import com.sdv.kit.pexelsapp.presentation.navigation.graph.homeNavGraph
+import com.sdv.kit.pexelsapp.presentation.navigation.graph.loginNavGraph
+import com.sdv.kit.pexelsapp.presentation.navigation.graph.profileNavGraph
 import com.sdv.kit.pexelsapp.presentation.ui.theme.AppTheme
 import com.sdv.kit.pexelsapp.presentation.ui.theme.Black
 
@@ -77,10 +79,18 @@ fun NavGraph(startDestination: NavRoute) {
             navController = navController,
             startDestination = startDestination.route
         ) {
+            loginNavGraph(
+                navController = navController,
+                isBottomNavigationBarVisible = isBottomNavigationBarVisible
+            )
             homeNavGraph(
                 navController = navController,
                 isBottomNavigationBarVisible = isBottomNavigationBarVisible,
                 activeItemName = activeItemName
+            )
+            profileNavGraph(
+                navController = navController,
+                isBottomNavigationBarVisible = isBottomNavigationBarVisible
             )
             bookmarksNavGraph(
                 navController = navController,
