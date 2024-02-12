@@ -82,6 +82,5 @@ class MainActivityViewModel @Inject constructor(
             true -> NavRoute.LoginScreen
             else -> NavRoute.HomeScreen
         }
-        _keepOnSplashScreen.value = false
     }
 }
