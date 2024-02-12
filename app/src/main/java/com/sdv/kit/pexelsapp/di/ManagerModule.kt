@@ -1,7 +1,9 @@
 package com.sdv.kit.pexelsapp.di
 
 import android.app.Application
+import com.sdv.kit.pexelsapp.data.manager.GoogleAuthManagerImpl
 import com.sdv.kit.pexelsapp.data.manager.ImageManagerImpl
+import com.sdv.kit.pexelsapp.domain.manager.GoogleAuthManager
 import com.sdv.kit.pexelsapp.domain.manager.ImageManager
 import dagger.Module
 import dagger.Provides
@@ -18,6 +20,14 @@ class ManagerModule {
     fun provideImageManager(
         application: Application
     ): ImageManager = ImageManagerImpl(
+        context = application
+    )
+
+    @Provides
+    @Singleton
+    fun provideGoogleAuthManager(
+        application: Application
+    ): GoogleAuthManager = GoogleAuthManagerImpl(
         context = application
     )
 }

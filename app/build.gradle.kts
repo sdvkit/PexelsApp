@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -52,6 +53,14 @@ android {
 }
 
 dependencies {
+
+    // Google auth
+    val googleAuthVersion = "20.7.0"
+    implementation("com.google.android.gms:play-services-auth:$googleAuthVersion")
+
+    // Firebase auth
+    val firebaseAuthVersion = "22.3.1"
+    implementation("com.google.firebase:firebase-auth:$firebaseAuthVersion")
 
     // Coil-compose version
     val coilComposeVersion = "2.5.0"
