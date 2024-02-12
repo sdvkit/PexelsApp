@@ -2,13 +2,16 @@ package com.sdv.kit.pexelsapp.presentation.home
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LinearProgressIndicator
@@ -22,7 +25,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -30,10 +35,13 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.compose.AsyncImage
 import com.sdv.kit.pexelsapp.R
 import com.sdv.kit.pexelsapp.domain.model.FeaturedCollection
 import com.sdv.kit.pexelsapp.domain.model.Photo
+import com.sdv.kit.pexelsapp.domain.model.UserDetails
 import com.sdv.kit.pexelsapp.presentation.Dimens
+import com.sdv.kit.pexelsapp.presentation.anim.bounceClickEffect
 import com.sdv.kit.pexelsapp.presentation.annotation.LightAndDarkPreview
 import com.sdv.kit.pexelsapp.presentation.common.SearchBar
 import com.sdv.kit.pexelsapp.presentation.common.stub.NoNetworkStub
@@ -53,6 +61,7 @@ import java.net.UnknownHostException
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    signedInUserDetails: UserDetails,
     onCacheRequest: () -> Boolean,
     isInternetConnected: Boolean,
     isInternetWasDisconnected: MutableState<Boolean>,
@@ -67,7 +76,8 @@ fun HomeScreen(
     onAnyPhotoClicked: (Photo) -> Unit,
     onCollectionsRequest: () -> Unit,
     onPhotosRequest: () -> Unit,
-    onTryAgainRequest: () -> Unit
+    onTryAgainRequest: () -> Unit,
+    onUserAvatarClicked: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val searchValue = remember { mutableStateOf(TextFieldValue(text = searchQuery)) }
@@ -145,6 +155,7 @@ fun HomeScreen(
     HomeScreenContent(
         modifier = modifier,
         coroutineScope = coroutineScope,
+        signedInUserDetails = signedInUserDetails,
         collections = collections,
         photos = photos,
         onSearch = onSearch,
@@ -156,7 +167,8 @@ fun HomeScreen(
         onTryAgainRequest = onTryAgainRequest,
         shouldShowNetworkStub = shouldShowNetworkStub,
         shouldShowLoadingProgress = shouldShowLoadingProgress,
-        shouldShowNoResultsStub = shouldShowNoResultsStub
+        shouldShowNoResultsStub = shouldShowNoResultsStub,
+        onUserAvatarClicked = onUserAvatarClicked
     )
 }
 
@@ -164,6 +176,7 @@ fun HomeScreen(
 private fun HomeScreenContent(
     modifier: Modifier = Modifier,
     coroutineScope: CoroutineScope,
+    signedInUserDetails: UserDetails,
     collections: LazyPagingItems<FeaturedCollection>,
     photos: LazyPagingItems<Photo>,
     onSearch: (String) -> Unit,
@@ -175,7 +188,8 @@ private fun HomeScreenContent(
     onTryAgainRequest: () -> Unit,
     shouldShowNetworkStub: MutableState<Boolean>,
     shouldShowLoadingProgress: MutableState<Boolean>,
-    shouldShowNoResultsStub: MutableState<Boolean>
+    shouldShowNoResultsStub: MutableState<Boolean>,
+    onUserAvatarClicked: () -> Unit
 ) {
     Column(
         modifier = modifier.background(
@@ -183,25 +197,28 @@ private fun HomeScreenContent(
         )
     ) {
         Spacer(modifier = Modifier.height(Dimens.PADDING_SMALL))
-        SearchBar(
+        Row(
             modifier = Modifier
-                .heightIn(min = Dimens.SEARCH_BAR_MIN_HEIGHT)
                 .fillMaxWidth()
                 .padding(horizontal = Dimens.PADDING_MEDIUM),
-            value = searchValue.value,
-            onSearch = { searchQuery ->
-                onSearch(searchQuery.text)
-            },
-            onValueChange = { newSearchValue ->
-                if (selectedFeaturedCollectionIndex.intValue != Constants.EMPTY_COLLECTION_HEADER_INDEX) {
-                    val collectionHeader =
-                        "${collections[selectedFeaturedCollectionIndex.intValue]!!.title} "
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SearchBar(
+                modifier = Modifier
+                    .heightIn(min = Dimens.SEARCH_BAR_MIN_HEIGHT)
+                    .weight(1f),
+                value = searchValue.value,
+                onSearch = { searchQuery ->
+                    onSearch(searchQuery.text)
+                },
+                onValueChange = { newSearchValue ->
+                    if (selectedFeaturedCollectionIndex.intValue != Constants.EMPTY_COLLECTION_HEADER_INDEX) {
+                        val collectionHeader = "${collections[selectedFeaturedCollectionIndex.intValue]!!.title} "
 
-                    if (!newSearchValue.text.contains(collectionHeader)) {
-                        selectedFeaturedCollectionIndex.intValue =
-                            Constants.EMPTY_COLLECTION_HEADER_INDEX
+                        if (!newSearchValue.text.contains(collectionHeader)) {
+                            selectedFeaturedCollectionIndex.intValue = Constants.EMPTY_COLLECTION_HEADER_INDEX
+                        }
                     }
-                }
 
                 searchJob.value?.cancel()
                 searchJob.value = coroutineScope.launch {
@@ -209,14 +226,30 @@ private fun HomeScreenContent(
                     onSearch(newSearchValue.text)
                 }
 
-                searchValue.value = newSearchValue
-            },
-            onClear = {
-                searchValue.value = searchValue.value.copy(text = "")
-                selectedFeaturedCollectionIndex.intValue = Constants.EMPTY_COLLECTION_HEADER_INDEX
-                onSearch(searchValue.value.text)
-            }
-        )
+                    searchValue.value = newSearchValue
+                },
+                onClear = {
+                    searchValue.value = searchValue.value.copy(text = "")
+                    selectedFeaturedCollectionIndex.intValue = Constants.EMPTY_COLLECTION_HEADER_INDEX
+                    onSearch(searchValue.value.text)
+                }
+            )
+            Spacer(modifier = Modifier.width(Dimens.PADDING_SMALL))
+            AsyncImage(
+                modifier = Modifier
+                    .bounceClickEffect(0.85f)
+                    .size(Dimens.USER_AVATAR_SIZE)
+                    .clip(CircleShape)
+                    .clickable {
+                        onUserAvatarClicked()
+                    },
+                model = signedInUserDetails.profilePictureUrl ?: "",
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                error = painterResource(R.drawable.img_placeholder),
+                placeholder = painterResource(R.drawable.img_placeholder)
+            )
+        }
         Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM))
 
         if (collections.itemCount > 0) {
@@ -426,6 +459,13 @@ fun HomeScreenPreview() {
 
         HomeScreen(
             modifier = Modifier.fillMaxSize(),
+            signedInUserDetails = UserDetails(
+                userId = "",
+                username = null,
+                profilePictureUrl = null,
+                phoneNumber = null,
+                email = ""
+            ),
             onCacheRequest = { false },
             isInternetConnected = false,
             isInternetWasDisconnected = isInternetWasDisconnected,
@@ -440,7 +480,8 @@ fun HomeScreenPreview() {
             onAnyPhotoClicked = { },
             onCollectionsRequest = { },
             onTryAgainRequest = { },
-            onPhotosRequest = { }
+            onPhotosRequest = { },
+            onUserAvatarClicked = { }
         )
     }
 }

@@ -1,14 +1,19 @@
 package com.sdv.kit.pexelsapp.presentation.home
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.sdv.kit.pexelsapp.domain.manager.GoogleAuthManager
+import com.sdv.kit.pexelsapp.domain.model.UserDetails
 import com.sdv.kit.pexelsapp.domain.usecase.featured.CheckIfCollectionsInCache
 import com.sdv.kit.pexelsapp.domain.usecase.featured.GetPagedFeaturedCollections
 import com.sdv.kit.pexelsapp.domain.usecase.photo.CheckIfPhotosInCache
 import com.sdv.kit.pexelsapp.domain.usecase.photo.GetPagedPhotos
 import com.sdv.kit.pexelsapp.domain.usecase.photo.SearchPhotos
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,11 +30,25 @@ class HomeViewModel @Inject constructor(
     private val getPagedPhotosFromUsecase: GetPagedPhotos,
     private val searchPhotosUsecase: SearchPhotos,
     private val checkIfPhotoInCacheUsecase: CheckIfPhotosInCache,
-    private val checkIfCollectionsInCacheUsecase: CheckIfCollectionsInCache
+    private val checkIfCollectionsInCacheUsecase: CheckIfCollectionsInCache,
+    private val googleAuthManager: GoogleAuthManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state
+
+    private val _userDetails = mutableStateOf<UserDetails?>(null)
+    val userDetails: State<UserDetails?> = _userDetails
+
+    private val userDetailsExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        throwable.printStackTrace()
+    }
+
+    init {
+        viewModelScope.launch(userDetailsExceptionHandler) {
+            _userDetails.value = googleAuthManager.getSignedInUser()
+        }
+    }
 
     fun checkIfCachePresents() {
         viewModelScope.launch(Dispatchers.IO) {
