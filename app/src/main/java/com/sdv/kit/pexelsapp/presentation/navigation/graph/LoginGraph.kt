@@ -11,10 +11,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.sdv.kit.pexelsapp.R
 import com.sdv.kit.pexelsapp.presentation.login.LoginScreen
 import com.sdv.kit.pexelsapp.presentation.login.LoginViewModel
 import com.sdv.kit.pexelsapp.presentation.navigation.NavRoute
@@ -49,12 +51,14 @@ fun NavGraphBuilder.loginNavGraph(
 
         when (errorState) {
             LoginViewModel.LoginException.LaunchError -> {
-                Toast.makeText(context, "Can't launch Sign in process", Toast.LENGTH_SHORT).show()
+                val message = stringResource(R.string.login_launch_error)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 viewModel.hideError()
             }
 
             LoginViewModel.LoginException.SignInError -> {
-                Toast.makeText(context, "Can't Sign in", Toast.LENGTH_SHORT).show()
+                val message = stringResource(R.string.sign_in_error)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 viewModel.hideError()
             }
 
