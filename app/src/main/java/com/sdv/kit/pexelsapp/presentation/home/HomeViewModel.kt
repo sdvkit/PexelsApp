@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -71,7 +72,9 @@ class HomeViewModel @Inject constructor(
                     started = SharingStarted.Lazily
                 )
 
-            _state.value = _state.value.copy(collections = featuredCollections)
+            _state.update { currentState ->
+                currentState.copy(collections = featuredCollections)
+            }
         }
     }
 
@@ -96,7 +99,9 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            _state.value = _state.value.copy(photos = photos)
+            _state.update { currentState ->
+                currentState.copy(photos = photos)
+            }
         }
     }
 
