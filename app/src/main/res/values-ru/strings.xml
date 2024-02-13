@@ -22,6 +22,8 @@
     <string name="sign_in_error">Не удалось залогиниться</string>
     <string name="charge_notification_title">Зарядка</string>
     <string name="charge_notification_text">Устройство заряжается</string>
+    <string name="daily_photos_notification_title">Ежедневные фото</string>
+    <string name="daily_photos_notification_text">Изучите сегодняшние фото</string>
     <string name="fcm_token_success_title">FCM Токен</string>
     <string name="fcm_token_success_text">"Проверьте логи чтобы получить FCM токен "</string>
 </resources>
