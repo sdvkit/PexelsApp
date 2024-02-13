@@ -47,6 +47,11 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             NetworkManagerImpl.checkInternetConnection(
                 onSuccess = {
+                    if (Firebase.auth.currentUser == null) {
+                        _keepOnSplashScreen.value = false
+                        return@checkInternetConnection
+                    }
+
                     loadRemoteData()
                 },
                 onError = {
