@@ -18,6 +18,7 @@ class ChargingWorker(
         val pendingIntent = buildPendingIntent()
 
         notificationManager.sendNotification(
+            notificationId = 1,
             icon = R.drawable.ic_logo,
             title = applicationContext.getString(R.string.charge_notification_title),
             text = applicationContext.getString(R.string.charge_notification_text),
@@ -34,7 +35,7 @@ class ChargingWorker(
             applicationContext,
             0,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE
         )
     }
 }
