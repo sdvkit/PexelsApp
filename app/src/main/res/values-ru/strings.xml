@@ -20,6 +20,8 @@
     <string name="none">Нет</string>
     <string name="login_launch_error">Не удалось запустить процесс логина</string>
     <string name="sign_in_error">Не удалось залогиниться</string>
+    <string name="charge_notification_title">Зарядка</string>
+    <string name="charge_notification_text">Устройство заряжается</string>
     <string name="fcm_token_success_title">FCM Токен</string>
     <string name="fcm_token_success_text">"Проверьте логи чтобы получить FCM токен "</string>
 </resources>
