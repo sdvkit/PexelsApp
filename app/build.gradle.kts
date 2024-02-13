@@ -54,6 +54,10 @@ android {
 
 dependencies {
 
+    // Work manager
+    val workManagerVersion = "2.9.0"
+    implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
+
     // Firebase messaging
     val firebaseMessagingVersion = "23.4.1"
     implementation("com.google.firebase:firebase-messaging:$firebaseMessagingVersion")
