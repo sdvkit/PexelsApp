@@ -19,6 +19,7 @@ class DailyCheckPhotosWorker(
         val pendingIntent = buildPendingIntent()
 
         notificationManager.sendNotification(
+            notificationId = 2,
             icon = R.drawable.ic_logo,
             title = applicationContext.getString(R.string.daily_photos_notification_title),
             text = applicationContext.getString(R.string.daily_photos_notification_text),
