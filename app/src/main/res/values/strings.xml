@@ -22,6 +22,8 @@
     <string name="sign_in_error">Can\'t Sign in</string>
     <string name="charge_notification_title">Charging</string>
     <string name="charge_notification_text">Device is charging</string>
+    <string name="daily_photos_notification_title">Daily photos</string>
+    <string name="daily_photos_notification_text">Explore today\'s photos</string>
     <string name="fcm_token_success_title">FCM Token</string>
     <string name="fcm_token_success_text">Check logs to get FCM token</string>
 </resources>
