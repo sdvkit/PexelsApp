@@ -79,6 +79,8 @@ fun NavGraphBuilder.loginNavGraph(
         }
 
         if (authResult != null) {
+            viewModel.startDailyCheckNotifications()
+
             navController.navigate(route = NavRoute.HomeScreen.route) {
                 popUpTo(navController.graph.id) {
                     inclusive = true
