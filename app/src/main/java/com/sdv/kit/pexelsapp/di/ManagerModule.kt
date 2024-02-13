@@ -1,6 +1,7 @@
 package com.sdv.kit.pexelsapp.di
 
 import android.app.Application
+import androidx.work.WorkManager
 import com.sdv.kit.pexelsapp.data.manager.GoogleAuthManagerImpl
 import com.sdv.kit.pexelsapp.data.manager.ImageManagerImpl
 import com.sdv.kit.pexelsapp.domain.manager.GoogleAuthManager
@@ -30,4 +31,10 @@ class ManagerModule {
     ): GoogleAuthManager = GoogleAuthManagerImpl(
         context = application
     )
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(
+        application: Application
+    ): WorkManager = WorkManager.getInstance(application)
 }

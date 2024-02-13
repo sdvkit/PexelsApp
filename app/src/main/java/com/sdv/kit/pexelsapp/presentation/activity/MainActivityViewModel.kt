@@ -5,6 +5,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
@@ -16,6 +19,7 @@ import com.sdv.kit.pexelsapp.domain.usecase.photo.CachePhotos
 import com.sdv.kit.pexelsapp.domain.usecase.photo.CheckIfPhotosInCache
 import com.sdv.kit.pexelsapp.domain.usecase.photo.GetPhotos
 import com.sdv.kit.pexelsapp.presentation.navigation.NavRoute
+import com.sdv.kit.pexelsapp.presentation.worker.ChargingWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -32,7 +36,8 @@ class MainActivityViewModel @Inject constructor(
     private val cachePhotosUsecase: CachePhotos,
     private val cacheFeaturedCollectionsUsecase: CacheFeaturedCollections,
     private val checkIfCollectionsInCacheUsecase: CheckIfCollectionsInCache,
-    private val checkIfPhotosInCacheUsecase: CheckIfPhotosInCache
+    private val checkIfPhotosInCacheUsecase: CheckIfPhotosInCache,
+    private val workManager: WorkManager
 ) : ViewModel() {
 
     private val _keepOnSplashScreen = MutableStateFlow(true)
@@ -45,6 +50,8 @@ class MainActivityViewModel @Inject constructor(
     val fcmToken: State<String> = _fcmToken
 
     init {
+        notifyIfCharging()
+
         viewModelScope.launch(Dispatchers.IO) {
             retrieveFCMToken()
         }
@@ -96,6 +103,18 @@ class MainActivityViewModel @Inject constructor(
             true -> NavRoute.LoginScreen
             else -> NavRoute.HomeScreen
         }
+    }
+
+    private fun notifyIfCharging() {
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(true)
+            .build()
+
+        val request = OneTimeWorkRequestBuilder<ChargingWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        workManager.enqueue(request)
     }
 
     private fun retrieveFCMToken() {
