@@ -54,6 +54,10 @@ android {
 
 dependencies {
 
+    // Lottie compose
+    val lottieComposeVersion = "4.0.0"
+    implementation("com.airbnb.android:lottie-compose:$lottieComposeVersion")
+
     // Google auth
     val googleAuthVersion = "20.7.0"
     implementation("com.google.android.gms:play-services-auth:$googleAuthVersion")

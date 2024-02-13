@@ -32,6 +32,7 @@ object Dimens {
 
     val NO_NETWORK_STUB_HEIGHT = 147.dp
     val NO_NETWORK_STUB_WIDTH = 250.dp
+    val STUB_ANIMATED_IMAGE_SIZE = 200.dp
 
     val BACK_BUTTON_SIZE = 40.dp
     val BACK_BUTTON_ICON_SIZE = 20.dp
