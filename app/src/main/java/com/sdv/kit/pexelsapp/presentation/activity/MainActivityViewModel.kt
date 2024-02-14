@@ -1,11 +1,13 @@
 package com.sdv.kit.pexelsapp.presentation.activity
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.sdv.kit.pexelsapp.data.manager.NetworkManagerImpl
 import com.sdv.kit.pexelsapp.domain.usecase.featured.CacheFeaturedCollections
 import com.sdv.kit.pexelsapp.domain.usecase.featured.CheckIfCollectionsInCache
@@ -39,7 +41,14 @@ class MainActivityViewModel @Inject constructor(
     private val _startDestination = mutableStateOf<NavRoute>(NavRoute.LoginScreen)
     val startDestination: State<NavRoute> = _startDestination
 
+    private val _fcmToken = mutableStateOf("")
+    val fcmToken: State<String> = _fcmToken
+
     init {
+        viewModelScope.launch(Dispatchers.IO) {
+            retrieveFCMToken()
+        }
+
         viewModelScope.launch {
             getStartDestination()
         }
@@ -87,5 +96,18 @@ class MainActivityViewModel @Inject constructor(
             true -> NavRoute.LoginScreen
             else -> NavRoute.HomeScreen
         }
+    }
+
+    private fun retrieveFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                _fcmToken.value = task.result
+                Log.i(FCM_TOKEN_LOG_TAG, _fcmToken.value)
+            }
+        }
+    }
+
+    companion object {
+        private const val FCM_TOKEN_LOG_TAG = "FCM_LOG"
     }
 }
