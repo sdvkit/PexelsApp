@@ -24,7 +24,8 @@ class DailyCheckPhotosWorker(
             title = applicationContext.getString(R.string.daily_photos_notification_title),
             text = applicationContext.getString(R.string.daily_photos_notification_text),
             autoCancel = true,
-            pendingIntent = pendingIntent
+            pendingIntent = pendingIntent,
+            isHighPriority = false
         )
 
         return Result.success()

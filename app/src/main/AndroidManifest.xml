@@ -36,6 +36,7 @@
             android:exported="true"
             android:theme="@style/Theme.PexelsApp.Splash"
             android:screenOrientation="portrait"
+            android:showOnLockScreen="true"
             tools:ignore="LockedOrientationActivity">
 
             <intent-filter>

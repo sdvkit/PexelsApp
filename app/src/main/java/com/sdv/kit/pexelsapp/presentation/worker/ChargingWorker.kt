@@ -23,7 +23,8 @@ class ChargingWorker(
             title = applicationContext.getString(R.string.charge_notification_title),
             text = applicationContext.getString(R.string.charge_notification_text),
             autoCancel = true,
-            pendingIntent = pendingIntent
+            pendingIntent = pendingIntent,
+            isHighPriority = true
         )
 
         return Result.success()
