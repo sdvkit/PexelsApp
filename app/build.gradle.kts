@@ -54,6 +54,10 @@ android {
 
 dependencies {
 
+    // Firebase messaging
+    val firebaseMessagingVersion = "23.4.1"
+    implementation("com.google.firebase:firebase-messaging:$firebaseMessagingVersion")
+
     // Google auth
     val googleAuthVersion = "20.7.0"
     implementation("com.google.android.gms:play-services-auth:$googleAuthVersion")

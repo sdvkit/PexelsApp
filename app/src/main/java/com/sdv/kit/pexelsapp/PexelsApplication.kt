@@ -1,6 +1,8 @@
 package com.sdv.kit.pexelsapp
 
+import android.app.Activity
 import android.app.Application
+import android.os.Bundle
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
@@ -30,5 +32,37 @@ class PexelsApplication : Application(), ImageLoaderFactory {
             }
             .logger(DebugLogger())
             .build()
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+
+            override fun onActivityStarted(activity: Activity) {
+                isAppVisible = true
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+                isAppVisible = true
+            }
+
+            override fun onActivityPaused(activity: Activity) {
+                isAppVisible = false
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+                isAppVisible = false
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
+            override fun onActivityDestroyed(activity: Activity) {}
+        })
+    }
+
+    companion object {
+        var isAppVisible = false
     }
 }
