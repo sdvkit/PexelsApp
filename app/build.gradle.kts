@@ -54,6 +54,10 @@ android {
 
 dependencies {
 
+    // Firebase messaging
+    val firebaseMessagingVersion = "23.4.1"
+    implementation("com.google.firebase:firebase-messaging:$firebaseMessagingVersion")
+
     // Lottie compose
     val lottieComposeVersion = "4.0.0"
     implementation("com.airbnb.android:lottie-compose:$lottieComposeVersion")
