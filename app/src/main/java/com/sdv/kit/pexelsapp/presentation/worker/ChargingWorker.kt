@@ -7,6 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.sdv.kit.pexelsapp.R
 import com.sdv.kit.pexelsapp.data.manager.NotificationManagerImpl
+import com.sdv.kit.pexelsapp.util.NotificationConstants
 
 class ChargingWorker(
     appContext: Context,
@@ -18,7 +19,7 @@ class ChargingWorker(
         val pendingIntent = buildPendingIntent()
 
         notificationManager.sendNotification(
-            notificationId = 1,
+            notificationId = NotificationConstants.NOTIFICATION_CHARGING_ID,
             icon = R.drawable.ic_logo,
             title = applicationContext.getString(R.string.charge_notification_title),
             text = applicationContext.getString(R.string.charge_notification_text),

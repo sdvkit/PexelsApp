@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import com.sdv.kit.pexelsapp.R
 import com.sdv.kit.pexelsapp.data.manager.NotificationManagerImpl
 import com.sdv.kit.pexelsapp.presentation.activity.MainActivity
+import com.sdv.kit.pexelsapp.util.NotificationConstants
 
 class DailyCheckPhotosWorker(
     appContext: Context,
@@ -19,7 +20,7 @@ class DailyCheckPhotosWorker(
         val pendingIntent = buildPendingIntent()
 
         notificationManager.sendNotification(
-            notificationId = 2,
+            notificationId = NotificationConstants.NOTIFICATION_DAILY_PHOTO_ID,
             icon = R.drawable.ic_logo,
             title = applicationContext.getString(R.string.daily_photos_notification_title),
             text = applicationContext.getString(R.string.daily_photos_notification_text),
