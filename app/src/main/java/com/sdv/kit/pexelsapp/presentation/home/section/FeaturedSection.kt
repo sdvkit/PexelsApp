@@ -4,6 +4,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,8 +43,17 @@ fun FeaturedSection(
     val coroutineScope = rememberCoroutineScope()
 
     LazyRow(
-        modifier = modifier,
-        state = listState
+        modifier = modifier.scrollable(
+            orientation = Orientation.Horizontal,
+            state = rememberScrollableState { delta ->
+                coroutineScope.launch {
+                    listState.scrollBy(-delta / 5)
+                }
+                delta
+            }
+        ),
+        state = listState,
+        userScrollEnabled = false
     ) {
         if (collections.itemCount > 0) {
             item {
@@ -93,9 +106,11 @@ fun FeaturedSection(
 @Composable
 fun FeaturedSectionPreview() {
     AppTheme {
-        Surface(modifier = Modifier.background(
-            color = AppTheme.colors.surface
-        )) {
+        Surface(
+            modifier = Modifier.background(
+                color = AppTheme.colors.surface
+            )
+        ) {
             val items = MutableStateFlow<PagingData<FeaturedCollection>>(
                 PagingData.empty()
             ).collectAsLazyPagingItems()
