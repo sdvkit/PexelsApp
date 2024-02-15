@@ -14,6 +14,7 @@ import com.sdv.kit.pexelsapp.R
 import com.sdv.kit.pexelsapp.data.manager.NotificationManagerImpl
 import com.sdv.kit.pexelsapp.presentation.navigation.NavGraph
 import com.sdv.kit.pexelsapp.presentation.ui.theme.AppTheme
+import com.sdv.kit.pexelsapp.util.NotificationConstants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,7 +64,7 @@ class MainActivity : ComponentActivity() {
         val notificationManager = NotificationManagerImpl(context = this)
 
         notificationManager.sendNotification(
-            notificationId = 3,
+            notificationId = NotificationConstants.NOTIFICATION_FCM_TOKEN_ID,
             icon = R.drawable.ic_logo,
             title = applicationContext.getString(R.string.fcm_token_success_title),
             text = applicationContext.getString(R.string.fcm_token_success_text),
