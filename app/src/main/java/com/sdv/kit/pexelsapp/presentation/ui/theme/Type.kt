@@ -24,6 +24,11 @@ val mulishFontFamily = FontFamily(
 )
 
 val Typography = Typography(
+    bodySmall = TextStyle(
+        fontFamily = mulishFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    ),
     bodyMedium = TextStyle(
         fontFamily = mulishFontFamily,
         fontWeight = FontWeight.Medium,
@@ -33,6 +38,11 @@ val Typography = Typography(
         fontFamily = mulishFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = mulishFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp
     ),
     labelMedium = TextStyle(
         fontFamily = mulishFontFamily,
@@ -47,6 +57,16 @@ val Typography = Typography(
     titleMedium = TextStyle(
         fontFamily = mulishFontFamily,
         fontWeight = FontWeight.Bold,
+        fontSize = 18.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = mulishFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = mulishFontFamily,
+        fontWeight = FontWeight.Medium,
         fontSize = 18.sp
     ),
     displayLarge = TextStyle(
