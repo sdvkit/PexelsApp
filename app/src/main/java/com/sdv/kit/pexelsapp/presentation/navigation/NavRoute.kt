@@ -10,6 +10,8 @@ sealed class NavRoute(val route: String) {
 
     data object ProfileScreen : NavRoute(route = "profile_screen")
 
+    data object CameraScreen : NavRoute(route = "profile_screen/camera")
+
     data class DetailsScreen(
         private val screenFrom: String,
         private val photoId: Int
