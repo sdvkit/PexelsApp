@@ -14,6 +14,7 @@ import com.sdv.kit.pexelsapp.domain.manager.ImageManager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import java.util.Locale
 import javax.inject.Inject
 
 class ImageManagerImpl @Inject constructor(
@@ -26,35 +27,84 @@ class ImageManagerImpl @Inject constructor(
         onError: (Exception) -> Unit
     ) {
         try {
-            val contentResolver: ContentResolver = context.contentResolver
-            val outputStream: OutputStream?
-
             val inputStream = java.net.URL(imageUrl).openStream()
             val bitmap = BitmapFactory.decodeStream(inputStream)
-            val filename = "${imageName}_${System.currentTimeMillis()}.jpg"
 
-            outputStream = when {
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
-                    getImageOutputStreamQ(
-                        contentResolver = contentResolver,
-                        filename = filename
-                    )
-                }
-
-                else -> {
-                    getImageOutputStreamDefault(
-                        contentResolver = contentResolver,
-                        filename = filename
-                    )
-                }
-            }
-
-            outputStream?.use {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
-            }
+            saveImageToGallery(
+                bitmap = bitmap,
+                imageName = imageName
+            )
         } catch (e: Exception) {
             onError(e)
         }
+    }
+
+    override fun saveImageToGallery(bitmap: Bitmap, imageName: String) {
+        val contentResolver: ContentResolver = context.contentResolver
+        val outputStream: OutputStream?
+        val filename = "${imageName}_${System.currentTimeMillis()}.jpg"
+
+        outputStream = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                getImageOutputStreamQ(
+                    contentResolver = contentResolver,
+                    filename = filename
+                )
+            }
+
+            else -> {
+                getImageOutputStreamDefault(
+                    contentResolver = contentResolver,
+                    filename = filename
+                )
+            }
+        }
+
+        outputStream?.use {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+        }
+    }
+
+    override fun getImagesFromPicturesFolder(prefix: String?): List<Bitmap> {
+        val imagesList = mutableListOf<Bitmap>()
+
+        val picturesDirectory =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+
+        if (picturesDirectory.exists() && picturesDirectory.isDirectory) {
+            val imageFiles = picturesDirectory.listFiles()
+
+            imageFiles?.forEach { file ->
+                if (file.isFile && isImageFile(file) && hasPrefix(file, prefix)) {
+                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                    imagesList.add(bitmap)
+                }
+            }
+        }
+
+        return imagesList
+    }
+
+    private fun hasPrefix(file: File, prefix: String?): Boolean {
+        if (prefix == null) {
+            return true
+        }
+
+        val fileName = file.name.lowercase(Locale.getDefault())
+        return fileName.startsWith(prefix)
+    }
+
+    private fun isImageFile(file: File): Boolean {
+        val supportedExtensions = arrayOf("jpg", "jpeg", "png", "gif", "bmp")
+        val fileName = file.name.lowercase(Locale.getDefault())
+
+        for (extension in supportedExtensions) {
+            if (fileName.endsWith(".$extension")) {
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun getImageOutputStreamQ(
@@ -68,7 +118,8 @@ class ImageManagerImpl @Inject constructor(
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
             }
 
-            val imageUri: Uri? = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            val imageUri: Uri? =
+                resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
             return imageUri?.let { resolver.openOutputStream(it) }
         }
     }
@@ -77,7 +128,8 @@ class ImageManagerImpl @Inject constructor(
         contentResolver: ContentResolver,
         filename: String
     ): FileOutputStream {
-        val imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val imagesDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val imageFile = File(imagesDir, filename)
 
         val contentValues = ContentValues().apply {
@@ -87,7 +139,12 @@ class ImageManagerImpl @Inject constructor(
         }
 
         contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-        MediaScannerConnection.scanFile(context, arrayOf(imageFile.absolutePath), arrayOf("image/jpeg"), null)
+        MediaScannerConnection.scanFile(
+            context,
+            arrayOf(imageFile.absolutePath),
+            arrayOf("image/jpeg"),
+            null
+        )
 
         return FileOutputStream(imageFile)
     }
