@@ -1,5 +1,6 @@
 package com.sdv.kit.pexelsapp.presentation.profile
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,9 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,41 +19,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.sdv.kit.pexelsapp.R
 import com.sdv.kit.pexelsapp.domain.model.UserDetails
 import com.sdv.kit.pexelsapp.presentation.Dimens
-import com.sdv.kit.pexelsapp.presentation.anim.bounceClickEffect
 import com.sdv.kit.pexelsapp.presentation.annotation.LightAndDarkPreview
+import com.sdv.kit.pexelsapp.presentation.profile.section.LocalPhotosSection
 import com.sdv.kit.pexelsapp.presentation.profile.section.ProfileDetailsSection
 import com.sdv.kit.pexelsapp.presentation.profile.section.ProfileTopBarSection
 import com.sdv.kit.pexelsapp.presentation.ui.theme.AppTheme
-import com.sdv.kit.pexelsapp.presentation.ui.theme.White
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     userDetails: UserDetails,
     onLogoutClicked: () -> Unit,
-    onBackButtonClicked: () -> Unit
+    onBackButtonClicked: () -> Unit,
+    onTakePhotoClicked: () -> Unit,
+    isStoragePermissionGranted: Boolean,
+    onPermissionRequest: () -> Unit,
+    images: List<Bitmap>
 ) {
+    val placeholder = painterResource(R.drawable.img_placeholder)
+    val avatarUrl = userDetails.profilePictureUrl ?: ""
+    val username = userDetails.username ?: ""
+
     Column(
-        modifier = modifier.background(
-            color = AppTheme.colors.surface
-        ),
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .background(
+                color = AppTheme.colors.surface
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val placeholder = painterResource(R.drawable.img_placeholder)
-        val avatarUrl = userDetails.profilePictureUrl ?: ""
-        val username = userDetails.username ?: ""
-
         Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM_SMALLER))
         ProfileTopBarSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimens.PADDING_MEDIUM),
-            onBackButtonClicked = onBackButtonClicked
+            onBackButtonClicked = onBackButtonClicked,
+            onLogoutButtonClicked = onLogoutClicked
         )
         Spacer(modifier = Modifier.height(Dimens.PADDING_BIG))
         AsyncImage(
@@ -83,33 +89,14 @@ fun ProfileScreen(
             userDetails = userDetails
         )
         Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM))
-        LogoutButton(
+        LocalPhotosSection(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = Dimens.PADDING_MEDIUM)
-                .bounceClickEffect(),
-            onClick = onLogoutClicked
-        )
-    }
-}
-
-@Composable
-private fun LogoutButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Button(
-        modifier = modifier,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AppTheme.colors.primary
-        ),
-        onClick = onClick
-    ) {
-        Text(
-            modifier = Modifier.padding(all = Dimens.PADDING_EXTRA_SMALL),
-            text = stringResource(R.string.logout),
-            color = White,
-            style = AppTheme.typography.labelMedium
+                .padding(horizontal = Dimens.PADDING_MEDIUM),
+            onTakePhotoButtonClicked = onTakePhotoClicked,
+            isStoragePermissionGranted = isStoragePermissionGranted,
+            onPermissionRequest = onPermissionRequest,
+            images = images
         )
     }
 }
@@ -120,6 +107,8 @@ fun ProfileScreenPreview() {
     AppTheme {
         ProfileScreen(
             modifier = Modifier.fillMaxSize(),
+            isStoragePermissionGranted = false,
+            onPermissionRequest = { },
             userDetails = UserDetails(
                 userId = "id",
                 username = "sdvkit",
@@ -128,7 +117,9 @@ fun ProfileScreenPreview() {
                 email = "testmail@gmail.com"
             ),
             onLogoutClicked = { },
-            onBackButtonClicked = { }
+            onBackButtonClicked = { },
+            onTakePhotoClicked = { },
+            images = listOf()
         )
     }
 }

@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.sdv.kit.pexelsapp.R
 import com.sdv.kit.pexelsapp.presentation.Dimens
@@ -23,7 +25,8 @@ import com.sdv.kit.pexelsapp.presentation.ui.theme.AppTheme
 @Composable
 fun ProfileTopBarSection(
     modifier: Modifier = Modifier,
-    onBackButtonClicked: () -> Unit
+    onBackButtonClicked: () -> Unit,
+    onLogoutButtonClicked: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -42,7 +45,18 @@ fun ProfileTopBarSection(
             color = AppTheme.colors.textColorVariant
         )
         Spacer(modifier = Modifier.weight(1f))
-        Spacer(modifier = Modifier.width(Dimens.BACK_BUTTON_SIZE))
+        IconButton(
+            modifier = Modifier
+                .size(Dimens.LOGOUT_BUTTON_SIZE)
+                .bounceClickEffect(),
+            onClick = onLogoutButtonClicked
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_logout),
+                contentDescription = null,
+                tint = AppTheme.colors.primary
+            )
+        }
     }
 }
 
@@ -59,7 +73,8 @@ fun ProfileTopBarSectionPreview() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(all = Dimens.PADDING_MEDIUM),
-                onBackButtonClicked = { }
+                onBackButtonClicked = { },
+                onLogoutButtonClicked = { }
             )
         }
     }
