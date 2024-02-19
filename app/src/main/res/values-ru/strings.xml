@@ -26,4 +26,16 @@
     <string name="daily_photos_notification_text">Изучите сегодняшние фото</string>
     <string name="fcm_token_success_title">FCM Токен</string>
     <string name="fcm_token_success_text">"Проверьте логи чтобы получить FCM токен "</string>
+    <string name="local_photos">Локальные фото</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="storage_permission_request_dialod_title">Необходимо разрешение</string>
+    <string name="storage_permission_request_dialod_text">Нам нужно это разрешение чтобы сохранять и просматривать ваши фото из галереи</string>
+    <string name="ok">Ок</string>
+    <string name="need_permission_request_dialog_title">Нам нужно разрашение</string>
+    <string name="allow_permission">Разрешите использовать хранилище</string>
+    <string name="photo_saved">Фото сохранено</string>
+    <string name="no_local_photos">У вас нет локальных фотографий</string>
+    <string name="go_to_settings">Перейти в настройки</string>
+    <string name="camera_permission_request_dialod_text">Нам нужно это разрешение чтобы делать фото</string>
 </resources>

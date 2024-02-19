@@ -26,4 +26,16 @@
     <string name="daily_photos_notification_text">Explore today\'s photos</string>
     <string name="fcm_token_success_title">FCM Token</string>
     <string name="fcm_token_success_text">Check logs to get FCM token</string>
+    <string name="local_photos">Local photos</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="storage_permission_request_dialod_title">Permission required</string>
+    <string name="storage_permission_request_dialod_text">We need this permission to save and show your photos from the Gallery</string>
+    <string name="ok">Ok</string>
+    <string name="need_permission_request_dialog_title">We need permission</string>
+    <string name="allow_permission">Allow storage usage</string>
+    <string name="photo_saved">Photo saved</string>
+    <string name="no_local_photos">You haven\'t got local photos</string>
+    <string name="go_to_settings">Go to settings</string>
+    <string name="camera_permission_request_dialod_text">We need this permission to take photos</string>
 </resources>
