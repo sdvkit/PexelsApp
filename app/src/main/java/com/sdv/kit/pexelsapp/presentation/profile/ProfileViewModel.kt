@@ -41,7 +41,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getStoragePermissionEntry(permission: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             val permissionEntry = getPermissionEntryUsecase(permission = permission)
 
             _profileState.value = _profileState.value.copy(
@@ -51,7 +51,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun saveStoragePermissionEntry(permission: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             savePermissionEntryUsecase(permission = permission)
             _profileState.value = _profileState.value.copy(
                 lastStoragePermissionEntry = permission to true
@@ -60,7 +60,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getCameraPermissionEntry(permission: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             val permissionEntry = getPermissionEntryUsecase(permission = permission)
 
             _profileState.value = _profileState.value.copy(
@@ -70,7 +70,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun saveCameraPermissionEntry(permission: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             savePermissionEntryUsecase(permission = permission)
             _profileState.value = _profileState.value.copy(
                 lastCameraPermissionEntry = permission to true
