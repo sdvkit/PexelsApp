@@ -66,36 +66,30 @@ class ImageManagerImpl @Inject constructor(
     }
 
     override fun getImagesFromPicturesFolder(prefix: String?): List<Bitmap> {
-        val imagesList = mutableListOf<Bitmap>()
-
         val picturesDirectory =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 
-        if (picturesDirectory.exists() && picturesDirectory.isDirectory) {
-            val imageFiles = picturesDirectory.listFiles()
-
-            imageFiles?.forEach { file ->
-                if (file.isFile && isImageFile(file) && hasPrefix(file, prefix)) {
-                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                    imagesList.add(bitmap)
-                }
-            }
+        if (!picturesDirectory.exists() || !picturesDirectory.isDirectory) {
+            return emptyList()
         }
 
-        return imagesList
+        val imageFiles = picturesDirectory.listFiles() ?: return emptyList()
+
+        return imageFiles
+            .filter { file ->
+                file.isFile && isImageFile(file) && hasPrefix(file, prefix)
+            }
+            .map { file ->
+                BitmapFactory.decodeFile(file.absolutePath)
+            }
     }
 
     private fun hasPrefix(file: File, prefix: String?): Boolean {
-        if (prefix == null) {
-            return true
-        }
-
         val fileName = file.name.lowercase(Locale.getDefault())
-        return fileName.startsWith(prefix)
+        return fileName.startsWith(prefix ?: return true)
     }
 
     private fun isImageFile(file: File): Boolean {
-        val supportedExtensions = arrayOf("jpg", "jpeg", "png", "gif", "bmp")
         val fileName = file.name.lowercase(Locale.getDefault())
 
         for (extension in supportedExtensions) {
@@ -147,5 +141,9 @@ class ImageManagerImpl @Inject constructor(
         )
 
         return FileOutputStream(imageFile)
+    }
+
+    companion object {
+        private val supportedExtensions = arrayOf("jpg", "jpeg", "png", "gif", "bmp")
     }
 }
