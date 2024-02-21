@@ -35,9 +35,9 @@ class PhotoRemoteMediator(
         state: PagingState<Int, Photo>
     ): MediatorResult {
         return try {
-            when (loadType) {
+            val page = when (loadType) {
                 LoadType.REFRESH -> {
-                    photoDao.clearAll()
+                    null
                 }
 
                 LoadType.PREPEND -> {
@@ -45,25 +45,30 @@ class PhotoRemoteMediator(
                 }
 
                 LoadType.APPEND -> {
-                    val loadKey = state.lastItemOrNull()?.page?.inc() ?: 1
-                    val photoResponse = pexelsApi.getCurated(page = loadKey)
-
-                    pexelsDatabaseClient.withTransaction {
-                        val photos = photoResponse.photos
-                            .map { photo ->
-                                photo.apply {
-                                    page = photoResponse.page
-                                    lastModified = System.currentTimeMillis()
-                                }
-                            }
-                            .toTypedArray()
-
-                        photoDao.insertAll(*photos)
-                    }
-
-                    endReached = photoResponse.nextPage == null
+                    state.lastItemOrNull()?.page?.inc() ?: 1
                 }
             }
+
+            val photoResponse = pexelsApi.getCurated(page = page ?: 1)
+
+            val photos = photoResponse.photos
+                .map { photo ->
+                    photo.apply {
+                        this.page = photoResponse.page
+                        lastModified = System.currentTimeMillis()
+                    }
+                }
+                .toTypedArray()
+
+            pexelsDatabaseClient.withTransaction {
+                if (loadType == LoadType.REFRESH) {
+                    photoDao.clearAll()
+                }
+
+                photoDao.insertAll(*photos)
+            }
+
+            endReached = photoResponse.nextPage == null
 
             MediatorResult.Success(endOfPaginationReached = endReached)
         } catch (e: Exception) {

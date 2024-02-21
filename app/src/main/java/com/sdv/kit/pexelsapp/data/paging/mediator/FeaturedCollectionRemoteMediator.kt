@@ -35,9 +35,9 @@ class FeaturedCollectionRemoteMediator(
         state: PagingState<Int, FeaturedCollection>
     ): MediatorResult {
         return try {
-            when (loadType) {
+            val page = when (loadType) {
                 LoadType.REFRESH -> {
-                    featuredCollectionDao.clearAll()
+                    null
                 }
 
                 LoadType.PREPEND -> {
@@ -45,25 +45,30 @@ class FeaturedCollectionRemoteMediator(
                 }
 
                 LoadType.APPEND -> {
-                    val loadKey = state.lastItemOrNull()?.page?.inc() ?: 1
-                    val featuredCollectionsResponse = pexelsApi.getFeatured(page = loadKey)
-
-                    pexelsDatabaseClient.withTransaction {
-                        val featuredCollections = featuredCollectionsResponse.featuredCollections
-                            .map { featuredCollection ->
-                                featuredCollection.apply {
-                                    page = featuredCollectionsResponse.page
-                                    lastModified = System.currentTimeMillis()
-                                }
-                            }
-                            .toTypedArray()
-
-                        featuredCollectionDao.insertAll(*featuredCollections)
-                    }
-
-                    endReached = featuredCollectionsResponse.nextPage == null
+                    state.lastItemOrNull()?.page?.inc() ?: 1
                 }
             }
+
+            val featuredCollectionsResponse = pexelsApi.getFeatured(page = page ?: 1)
+
+            val featuredCollections = featuredCollectionsResponse.featuredCollections
+                .map { featuredCollection ->
+                    featuredCollection.apply {
+                        this.page = featuredCollectionsResponse.page
+                        lastModified = System.currentTimeMillis()
+                    }
+                }
+                .toTypedArray()
+
+            pexelsDatabaseClient.withTransaction {
+                if (loadType == LoadType.REFRESH) {
+                    featuredCollectionDao.clearAll()
+                }
+
+                featuredCollectionDao.insertAll(*featuredCollections)
+            }
+
+            endReached = featuredCollectionsResponse.nextPage == null
 
             MediatorResult.Success(endOfPaginationReached = endReached)
         } catch (e: Exception) {
