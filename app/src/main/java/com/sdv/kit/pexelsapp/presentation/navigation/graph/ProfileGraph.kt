@@ -60,19 +60,11 @@ fun NavGraphBuilder.profileNavGraph(
         val viewModel: ProfileViewModel = hiltViewModel()
 
         viewModel.getLocalImages()
-        getStorageRequiredPermissions().forEach { permission ->
-            viewModel.getStoragePermissionEntry(permission = permission)
-        }
-        getCameraRequiredPermissions().forEach { permission ->
-            viewModel.getCameraPermissionEntry(permission = permission)
-        }
 
         val profileState by viewModel.profileState
 
         val isSignedOut = profileState.isSignedOut
         val localImages = profileState.localImages
-        val lastStoragePermissionEntry = profileState.lastStoragePermissionEntry
-        val lastCameraPermissionEntry = profileState.lastCameraPermissionEntry
 
         if (isSignedOut) {
             navController.navigate(route = NavRoute.LoginScreen.route) {
@@ -104,6 +96,7 @@ fun NavGraphBuilder.profileNavGraph(
                     isCameraPermissionGranted = true
                     navController.navigate(route = NavRoute.CameraScreen.route)
                 }
+
                 else -> denyCameraPermissionsCount += 1
             }
         }
@@ -126,9 +119,7 @@ fun NavGraphBuilder.profileNavGraph(
 
         StorageRequestPermissionRationaleModals(
             isStoragePermissionGranted = isStoragePermissionGranted,
-            lastStoragePermissionEntry = lastStoragePermissionEntry,
             denyStoragePermissionsCount = denyStoragePermissionsCount,
-            viewModel = viewModel,
             shouldShowRequestPermissionRationale = shouldShowStorageRequestPermissionRationale,
             storagePermissionsLauncher = storagePermissionsLauncher,
             settingsLauncher = settingsLauncher
@@ -136,9 +127,7 @@ fun NavGraphBuilder.profileNavGraph(
 
         CameraRequestPermissionRationaleModals(
             isCameraPermissionGranted = isCameraPermissionGranted,
-            lastCameraPermissionEntry = lastCameraPermissionEntry,
             denyCameraPermissionsCount = denyCameraPermissionsCount,
-            viewModel = viewModel,
             shouldShowCameraRequestPermissionRationale = shouldShowCameraRequestPermissionRationale,
             cameraPermissionLauncher = cameraPermissionLauncher,
             settingsLauncher = settingsLauncher
@@ -157,7 +146,7 @@ fun NavGraphBuilder.profileNavGraph(
                         storagePermissionsLauncher.launch(getStorageRequiredPermissions().toTypedArray())
                     },
                     onShouldShowRequestPermissionRationale = {
-                        if (lastStoragePermissionEntry?.second == false && denyStoragePermissionsCount == 0) {
+                        if (denyStoragePermissionsCount == 0) {
                             storagePermissionsLauncher.launch(getStorageRequiredPermissions().toTypedArray())
                             return@checkStoragePermission
                         }
@@ -183,7 +172,7 @@ fun NavGraphBuilder.profileNavGraph(
                         cameraPermissionLauncher.launch(getCameraRequiredPermissions().toTypedArray())
                     },
                     onShouldShowRequestPermissionRationale = {
-                        if (lastCameraPermissionEntry?.second == false && denyCameraPermissionsCount == 0) {
+                        if (denyCameraPermissionsCount == 0) {
                             cameraPermissionLauncher.launch(getCameraRequiredPermissions().toTypedArray())
                             return@checkCameraPermission
                         }
@@ -200,20 +189,17 @@ fun NavGraphBuilder.profileNavGraph(
 @Composable
 private fun StorageRequestPermissionRationaleModals(
     isStoragePermissionGranted: Boolean,
-    lastStoragePermissionEntry: Pair<String, Boolean>?,
     denyStoragePermissionsCount: Int,
-    viewModel: ProfileViewModel,
     shouldShowRequestPermissionRationale: MutableState<Boolean>,
     storagePermissionsLauncher: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
     settingsLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ) {
-    if (!isStoragePermissionGranted && lastStoragePermissionEntry?.second == false && denyStoragePermissionsCount == 1) {
+    if (!isStoragePermissionGranted && denyStoragePermissionsCount == 1) {
         RequestPermissionRationaleModal(
             title = R.string.need_permission_request_dialog_title,
             text = R.string.storage_permission_request_dialod_text,
             confirmLabel = R.string.ok,
             onConfirmation = {
-                viewModel.saveStoragePermissionEntry(permission = lastStoragePermissionEntry.first)
                 storagePermissionsLauncher.launch(getStorageRequiredPermissions().toTypedArray())
             }
         )
@@ -243,20 +229,17 @@ private fun StorageRequestPermissionRationaleModals(
 @Composable
 private fun CameraRequestPermissionRationaleModals(
     isCameraPermissionGranted: Boolean,
-    lastCameraPermissionEntry: Pair<String, Boolean>?,
     denyCameraPermissionsCount: Int,
-    viewModel: ProfileViewModel,
     shouldShowCameraRequestPermissionRationale: MutableState<Boolean>,
     cameraPermissionLauncher: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>,
     settingsLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ) {
-    if (!isCameraPermissionGranted && lastCameraPermissionEntry?.second == false && denyCameraPermissionsCount == 1) {
+    if (!isCameraPermissionGranted && denyCameraPermissionsCount == 1) {
         RequestPermissionRationaleModal(
             title = R.string.need_permission_request_dialog_title,
             text = R.string.camera_permission_request_dialod_text,
             confirmLabel = R.string.ok,
             onConfirmation = {
-                viewModel.saveCameraPermissionEntry(permission = lastCameraPermissionEntry.first)
                 cameraPermissionLauncher.launch(getStorageRequiredPermissions().toTypedArray())
             }
         )

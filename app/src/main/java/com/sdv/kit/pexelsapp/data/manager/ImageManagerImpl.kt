@@ -85,8 +85,9 @@ class ImageManagerImpl @Inject constructor(
     }
 
     private fun hasPrefix(file: File, prefix: String?): Boolean {
+        prefix ?: return true
         val fileName = file.name.lowercase(Locale.getDefault())
-        return fileName.startsWith(prefix ?: return true)
+        return fileName.startsWith(prefix)
     }
 
     private fun isImageFile(file: File): Boolean {

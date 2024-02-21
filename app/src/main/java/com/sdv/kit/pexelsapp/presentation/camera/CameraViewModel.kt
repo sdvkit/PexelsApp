@@ -10,8 +10,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sdv.kit.pexelsapp.domain.usecase.permission.GetPermissionEntry
-import com.sdv.kit.pexelsapp.domain.usecase.permission.SavePermissionEntry
 import com.sdv.kit.pexelsapp.domain.usecase.photo.SavePhotoImageToGallery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -22,9 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CameraViewModel @Inject constructor(
-    private val savePhotoImageToGalleryUsecase: SavePhotoImageToGallery,
-    private val getPermissionEntryUsecase: GetPermissionEntry,
-    private val savePermissionEntryUsecase: SavePermissionEntry
+    private val savePhotoImageToGalleryUsecase: SavePhotoImageToGallery
 ) : ViewModel() {
 
     private val _state = mutableStateOf(CameraState())
@@ -37,25 +33,6 @@ class CameraViewModel @Inject constructor(
             lastBitmap = null,
             errorMessage = throwable.message
         )
-    }
-
-    fun getStoragePermissionEntry(permission: String) {
-        viewModelScope.launch {
-            val permissionEntry = getPermissionEntryUsecase(permission = permission)
-
-            _state.value = _state.value.copy(
-                lastPermissionEntry = permission to permissionEntry
-            )
-        }
-    }
-
-    fun savePermissionEntry(permission: String) {
-        viewModelScope.launch {
-            savePermissionEntryUsecase(permission = permission)
-            _state.value = _state.value.copy(
-                lastPermissionEntry = permission to true
-            )
-        }
     }
 
     fun savePhoto() {
