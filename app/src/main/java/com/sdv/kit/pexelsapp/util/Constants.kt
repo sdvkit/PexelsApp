@@ -26,6 +26,4 @@ object Constants {
     const val GOOGLE_WEB_CLIENT_ID = "866109355732-6pqn3etfg9jkdavoleqmae92egt1sa6q.apps.googleusercontent.com"
 
     const val IMAGE_NAME_PREFIX = "pexels_photo_"
-
-    const val SHARED_PREF_NAME = "pexels_shared_pref"
 }

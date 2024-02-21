@@ -76,13 +76,8 @@ fun NavGraphBuilder.cameraGraph(
         val viewModel: CameraViewModel = hiltViewModel()
         val state by viewModel.state
 
-        getStorageRequiredPermissions().forEach { permission ->
-            viewModel.getStoragePermissionEntry(permission = permission)
-        }
-
         val lastBitmap = state.lastBitmap
         val errorMessage = state.errorMessage
-        val lastPermissionEntry = state.lastPermissionEntry
 
         BackHandler {
             viewModel.cancelSave()
@@ -125,13 +120,12 @@ fun NavGraphBuilder.cameraGraph(
             }
         }
 
-        if (!isStoragePermissionGranted && lastPermissionEntry?.second == false && storagePermissionsDenyCount == 1) {
+        if (!isStoragePermissionGranted && storagePermissionsDenyCount == 1) {
             RequestPermissionRationaleModal(
                 title = R.string.need_permission_request_dialog_title,
                 text = R.string.storage_permission_request_dialod_text,
                 confirmLabel = R.string.ok,
                 onConfirmation = {
-                    viewModel.savePermissionEntry(permission = lastPermissionEntry.first)
                     storagePermissionsLauncher.launch(getStorageRequiredPermissions().toTypedArray())
                 }
             )
@@ -185,7 +179,7 @@ fun NavGraphBuilder.cameraGraph(
                             storagePermissionsLauncher.launch(getStorageRequiredPermissions().toTypedArray())
                         },
                         onShouldShowRequestPermissionRationale = {
-                            if (lastPermissionEntry?.second == false && storagePermissionsDenyCount == 0) {
+                            if (storagePermissionsDenyCount == 0) {
                                 storagePermissionsLauncher.launch(getStorageRequiredPermissions().toTypedArray())
                                 return@checkStoragePermission
                             }
