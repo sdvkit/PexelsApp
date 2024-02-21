@@ -214,6 +214,12 @@ private fun HomeScreenContent(
                     onSearch(searchQuery.text)
                 },
                 onValueChange = { newSearchValue ->
+                    // todo look closer on value change
+                    if (newSearchValue.text.isBlank()) {
+                        onSearch(newSearchValue.text)
+                        return@SearchBar
+                    }
+
                     if (selectedFeaturedCollectionIndex.intValue != Constants.EMPTY_COLLECTION_HEADER_INDEX) {
                         val collectionHeader =
                             "${collections[selectedFeaturedCollectionIndex.intValue]!!.title} "
