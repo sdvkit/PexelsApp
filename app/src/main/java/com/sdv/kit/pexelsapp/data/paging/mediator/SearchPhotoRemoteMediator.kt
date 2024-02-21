@@ -36,9 +36,9 @@ class SearchPhotoRemoteMediator(
         state: PagingState<Int, Photo>
     ): MediatorResult {
         return try {
-            when (loadType) {
+            val page = when (loadType) {
                 LoadType.REFRESH -> {
-                    photoDao.clearAll()
+                    null
                 }
 
                 LoadType.PREPEND -> {
@@ -46,25 +46,30 @@ class SearchPhotoRemoteMediator(
                 }
 
                 LoadType.APPEND -> {
-                    val loadKey = state.lastItemOrNull()?.page?.inc() ?: 1
-                    val photoResponse = pexelsApi.searchPhoto(page = loadKey, query = query)
-
-                    pexelsDatabaseClient.withTransaction {
-                        val photos = photoResponse.photos
-                            .map { photo ->
-                                photo.apply {
-                                    page = photoResponse.page
-                                    lastModified = System.currentTimeMillis()
-                                }
-                            }
-                            .toTypedArray()
-
-                        photoDao.insertAll(*photos)
-                    }
-
-                    endReached = photoResponse.nextPage == null
+                    state.lastItemOrNull()?.page?.inc() ?: 1
                 }
             }
+
+            val photoResponse = pexelsApi.searchPhoto(page = page ?: 1, query = query)
+
+            val photos = photoResponse.photos
+                .map { photo ->
+                    photo.apply {
+                        this.page = photoResponse.page
+                        lastModified = System.currentTimeMillis()
+                    }
+                }
+                .toTypedArray()
+
+            pexelsDatabaseClient.withTransaction {
+                if (loadType == LoadType.REFRESH) {
+                    photoDao.clearAll()
+                }
+
+                photoDao.insertAll(*photos)
+            }
+
+            endReached = photoResponse.nextPage == null
 
             MediatorResult.Success(endOfPaginationReached = endReached)
         } catch (e: Exception) {
