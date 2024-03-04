@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -41,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
@@ -69,6 +71,10 @@ dependencies {
     // Firebase messaging
     val firebaseMessagingVersion = "23.4.1"
     implementation("com.google.firebase:firebase-messaging:$firebaseMessagingVersion")
+
+    // Firestore
+    val firestoreVersion = "24.10.2"
+    implementation("com.google.firebase:firebase-firestore:$firestoreVersion")
 
     // Lottie compose
     val lottieComposeVersion = "4.0.0"
