@@ -17,6 +17,8 @@ import com.sdv.kit.pexelsapp.presentation.Dimens
 import com.sdv.kit.pexelsapp.presentation.common.BottomNavigationBar
 import com.sdv.kit.pexelsapp.presentation.navigation.graph.bookmarksNavGraph
 import com.sdv.kit.pexelsapp.presentation.navigation.graph.cameraGraph
+import com.sdv.kit.pexelsapp.presentation.navigation.graph.chatNavGraph
+import com.sdv.kit.pexelsapp.presentation.navigation.graph.conversationNavGraph
 import com.sdv.kit.pexelsapp.presentation.navigation.graph.detailsGraph
 import com.sdv.kit.pexelsapp.presentation.navigation.graph.homeNavGraph
 import com.sdv.kit.pexelsapp.presentation.navigation.graph.loginNavGraph
@@ -37,6 +39,18 @@ fun NavGraph(startDestination: NavRoute) {
             activeIcon = R.drawable.ic_home_active,
             onClick = {
                 navController.navigate(route = NavRoute.HomeScreen.route) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
+                }
+            }
+        ),
+        NavigationItem(
+            name = NavRoute.ChatScreen.route,
+            icon = R.drawable.ic_chat_inactive,
+            activeIcon = R.drawable.ic_chat_active,
+            onClick = {
+                navController.navigate(route = NavRoute.ChatScreen.route) {
                     popUpTo(navController.graph.id) {
                         inclusive = true
                     }
@@ -90,6 +104,15 @@ fun NavGraph(startDestination: NavRoute) {
                 activeItemName = activeItemName
             )
             profileNavGraph(
+                navController = navController,
+                isBottomNavigationBarVisible = isBottomNavigationBarVisible
+            )
+            chatNavGraph(
+                navController = navController,
+                isBottomNavigationBarVisible = isBottomNavigationBarVisible,
+                activeItemName = activeItemName
+            )
+            conversationNavGraph(
                 navController = navController,
                 isBottomNavigationBarVisible = isBottomNavigationBarVisible
             )
