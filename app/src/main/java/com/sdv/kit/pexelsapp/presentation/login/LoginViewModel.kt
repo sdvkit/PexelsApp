@@ -8,6 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.sdv.kit.pexelsapp.domain.manager.FCMManager
 import com.sdv.kit.pexelsapp.domain.manager.GoogleAuthManager
 import com.sdv.kit.pexelsapp.domain.model.UserDetails
 import com.sdv.kit.pexelsapp.presentation.worker.DailyCheckPhotosWorker
@@ -21,8 +25,11 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val googleAuthManager: GoogleAuthManager,
-    private val workManager: WorkManager
+    private val workManager: WorkManager,
+    private val fcmManager: FCMManager
 ) : ViewModel() {
+
+    private val firebaseDb = Firebase.firestore
 
     private val authResultExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
@@ -52,6 +59,22 @@ class LoginViewModel @Inject constructor(
     fun signIn(data: Intent?) {
         viewModelScope.launch(Dispatchers.IO + authResultExceptionHandler) {
             _authResult.value = googleAuthManager.signIn(intent = data)
+        }
+    }
+
+    fun saveUserDetailsInfo(userDetails: UserDetails) {
+        viewModelScope.launch(Dispatchers.IO) {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    userDetails.fcmToken = task.result
+
+                    firebaseDb.collection("users")
+                        .document(userDetails.userId)
+                        .set(userDetails)
+
+                    fcmManager.saveToken(token = task.result)
+                }
+            }
         }
     }
 
