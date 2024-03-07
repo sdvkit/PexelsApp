@@ -6,8 +6,10 @@ import androidx.paging.PagingConfig
 import com.sdv.kit.pexelsapp.data.local.PexelsDatabaseClient
 import com.sdv.kit.pexelsapp.data.paging.mediator.FeaturedCollectionRemoteMediator
 import com.sdv.kit.pexelsapp.data.paging.mediator.PhotoRemoteMediator
-import com.sdv.kit.pexelsapp.data.remote.PexelsApi
-import com.sdv.kit.pexelsapp.data.remote.PexelsApiClient
+import com.sdv.kit.pexelsapp.data.remote.api.FCMApi
+import com.sdv.kit.pexelsapp.data.remote.api.PexelsApi
+import com.sdv.kit.pexelsapp.data.remote.client.FCMApiClient
+import com.sdv.kit.pexelsapp.data.remote.client.PexelsApiClient
 import com.sdv.kit.pexelsapp.domain.model.FeaturedCollection
 import com.sdv.kit.pexelsapp.domain.model.Photo
 import com.sdv.kit.pexelsapp.util.Constants
@@ -29,9 +31,20 @@ class ApiModule {
 
     @Provides
     @Singleton
+    fun provideFCMApiClient(): FCMApiClient =
+        FCMApiClient
+
+    @Provides
+    @Singleton
     fun providePexelsApi(
         apiClient: PexelsApiClient
     ): PexelsApi = apiClient.client.create()
+
+    @Provides
+    @Singleton
+    fun provideFCMApi(
+        apiClient: FCMApiClient
+    ): FCMApi = apiClient.client.create()
 
     @OptIn(ExperimentalPagingApi::class)
     @Provides
