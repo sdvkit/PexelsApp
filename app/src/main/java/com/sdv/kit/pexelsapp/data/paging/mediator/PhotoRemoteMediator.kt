@@ -7,7 +7,7 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.sdv.kit.pexelsapp.data.local.PexelsDatabaseClient
 import com.sdv.kit.pexelsapp.data.manager.NetworkManagerImpl
-import com.sdv.kit.pexelsapp.data.remote.PexelsApi
+import com.sdv.kit.pexelsapp.data.remote.api.PexelsApi
 import com.sdv.kit.pexelsapp.domain.model.Photo
 
 @OptIn(ExperimentalPagingApi::class)

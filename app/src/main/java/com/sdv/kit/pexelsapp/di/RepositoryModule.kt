@@ -2,7 +2,7 @@ package com.sdv.kit.pexelsapp.di
 
 import androidx.paging.Pager
 import com.sdv.kit.pexelsapp.data.local.PexelsDatabaseClient
-import com.sdv.kit.pexelsapp.data.remote.PexelsApi
+import com.sdv.kit.pexelsapp.data.remote.api.PexelsApi
 import com.sdv.kit.pexelsapp.data.repository.BookmarkedRepositoryImpl
 import com.sdv.kit.pexelsapp.data.repository.FeaturedCollectionRepositoryImpl
 import com.sdv.kit.pexelsapp.data.repository.PhotoRepositoryImpl

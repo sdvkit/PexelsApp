@@ -1,4 +1,4 @@
-package com.sdv.kit.pexelsapp.data.remote
+package com.sdv.kit.pexelsapp.data.remote.api
 
 import com.sdv.kit.pexelsapp.data.remote.dto.FeaturedCollectionsResponse
 import com.sdv.kit.pexelsapp.data.remote.dto.PhotoResponse
