@@ -1,5 +1,6 @@
 package com.sdv.kit.pexelsapp.presentation.common
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -56,6 +57,7 @@ fun SearchBar(
     value: TextFieldValue,
     onSearch: (TextFieldValue) -> Unit,
     onValueChange: (TextFieldValue) -> Unit,
+    @StringRes placeholderText: Int = R.string.search,
     onClear: () -> Unit
 ) {
     TextField(
@@ -100,7 +102,7 @@ fun SearchBar(
         shape = CircleShape,
         placeholder = {
             Text(
-                text = stringResource(R.string.search),
+                text = stringResource(placeholderText),
                 style = AppTheme.typography.bodyMedium
             )
         }
