@@ -22,43 +22,55 @@ fun ChatConversationsTabSection(
     searchValue: String,
     onNewChatButtonClicked: () -> Unit
 ) {
-    val filteredChats = filterChats(
-        chats = chatDetailsList,
-        query = searchValue
-    )
-
     when (chatDetailsList.isNotEmpty()) {
         true -> {
-            when (filteredChats.isNotEmpty()) {
-                true -> {
-                    LazyColumn(modifier = modifier) {
-                        items(filteredChats) { chatDetails ->
-                            ChatListItem(
-                                modifier = Modifier
-                                    .clickable {
-                                        onAnyItemClicked(chatDetails)
-                                    }
-                                    .fillMaxWidth()
-                                    .padding(
-                                        horizontal = Dimens.PADDING_MEDIUM,
-                                        vertical = Dimens.PADDING_SMALL
-                                    ),
-                                chatDetails = chatDetails
-                            )
-                        }
-                    }
-                }
-
-                false -> {
-                    NoSearchResultsStub(modifier = Modifier.fillMaxSize())
-                }
-            }
+            ChatConversationsTabSectionBody(
+                modifier = modifier,
+                chatDetailsList = chatDetailsList,
+                onAnyItemClicked = onAnyItemClicked,
+                searchValue = searchValue
+            )
         }
 
         false -> {
             NoChatsStub(
                 modifier = Modifier.fillMaxSize(),
                 onClick = onNewChatButtonClicked
+            )
+        }
+    }
+}
+
+@Composable
+private fun ChatConversationsTabSectionBody(
+    modifier: Modifier = Modifier,
+    chatDetailsList: List<ChatDetails>,
+    onAnyItemClicked: (ChatDetails) -> Unit,
+    searchValue: String
+) {
+    val filteredChats = filterChats(
+        chats = chatDetailsList,
+        query = searchValue
+    )
+
+    if (filteredChats.isEmpty()) {
+        NoSearchResultsStub(modifier = Modifier.fillMaxSize())
+        return
+    }
+
+    LazyColumn(modifier = modifier) {
+        items(filteredChats) { chatDetails ->
+            ChatListItem(
+                modifier = Modifier
+                    .clickable {
+                        onAnyItemClicked(chatDetails)
+                    }
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = Dimens.PADDING_MEDIUM,
+                        vertical = Dimens.PADDING_SMALL
+                    ),
+                chatDetails = chatDetails
             )
         }
     }

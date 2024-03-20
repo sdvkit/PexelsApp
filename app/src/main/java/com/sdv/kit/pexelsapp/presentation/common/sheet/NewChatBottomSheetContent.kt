@@ -15,6 +15,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -97,6 +98,33 @@ fun NewChatBottomSheetContent(
         }
         Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM_SMALLER))
 
+        NewChatBottomSheetContentBody(
+            modifier = Modifier.fillMaxWidth(),
+            currentUser = currentUser,
+            searchState = searchState,
+            onAddUserClicked = onAddUserClicked,
+            requestedUsers = requestedUsers,
+            onRemoveUserRequestClicked = onRemoveUserRequestClicked,
+            searchJob = searchJob,
+            searchValue = searchValue
+        )
+
+        Spacer(modifier = Modifier.height(Dimens.PADDING_BIG))
+    }
+}
+
+@Composable
+private fun NewChatBottomSheetContentBody(
+    modifier: Modifier = Modifier,
+    currentUser: UserDetails,
+    searchState: UsersSearchState,
+    onAddUserClicked: (UserDetails) -> Unit,
+    requestedUsers: List<UserDetails>,
+    onRemoveUserRequestClicked: (UserDetails) -> Unit,
+    searchJob: MutableState<Job?>,
+    searchValue: MutableState<TextFieldValue>
+) {
+    Column(modifier = modifier) {
         when {
             searchState.searchResult.isNotEmpty() && !searchState.isSearching -> {
                 LazyColumn {
@@ -145,8 +173,6 @@ fun NewChatBottomSheetContent(
                 Spacer(modifier = Modifier.weight(1f))
             }
         }
-
-        Spacer(modifier = Modifier.height(Dimens.PADDING_BIG))
     }
 }
 

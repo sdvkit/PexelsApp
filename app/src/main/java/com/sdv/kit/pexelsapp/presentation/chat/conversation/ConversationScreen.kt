@@ -7,19 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import com.sdv.kit.pexelsapp.R
 import com.sdv.kit.pexelsapp.domain.model.Chat
 import com.sdv.kit.pexelsapp.domain.model.ChatDetails
 import com.sdv.kit.pexelsapp.domain.model.Message
@@ -28,9 +23,10 @@ import com.sdv.kit.pexelsapp.presentation.Dimens
 import com.sdv.kit.pexelsapp.presentation.annotation.LightAndDarkPreview
 import com.sdv.kit.pexelsapp.presentation.chat.conversation.section.ConversationInputSection
 import com.sdv.kit.pexelsapp.presentation.chat.conversation.section.ConversationTopBarSection
-import com.sdv.kit.pexelsapp.presentation.common.AnimatedLottieImage
 import com.sdv.kit.pexelsapp.presentation.common.item.MessageItem
+import com.sdv.kit.pexelsapp.presentation.common.stub.NoMessagesStub
 import com.sdv.kit.pexelsapp.presentation.ui.theme.AppTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,8 +44,11 @@ fun ConversationScreen(
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
 
-    val header = clickedChatDetails?.chatName ?: chat?.chatDetails?.chatName ?: clickedUserDetails?.username ?: ""
-    val imageUrl = clickedChatDetails?.chatImageUrl ?: chat?.chatDetails?.chatImageUrl ?: clickedUserDetails?.profilePictureUrl ?: ""
+    val header =
+        clickedChatDetails?.chatName ?: chat?.chatDetails?.chatName ?: clickedUserDetails?.username
+        ?: ""
+    val imageUrl = clickedChatDetails?.chatImageUrl ?: chat?.chatDetails?.chatImageUrl
+    ?: clickedUserDetails?.profilePictureUrl ?: ""
 
     Column(modifier = modifier) {
         ConversationTopBarSection(
@@ -62,7 +61,40 @@ fun ConversationScreen(
             onDetailsButtonClicked = onDetailsButtonClicked
         )
         Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM))
+        ConversationBody(
+            modifier = Modifier.weight(1f),
+            user = user,
+            chat = chat,
+            coroutineScope = coroutineScope,
+            lazyListState = lazyListState
+        )
+        Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM))
+        ConversationInputSection(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Dimens.PADDING_MEDIUM_SMALLER),
+            onSendButtonClicked = { message ->
+                onSendButtonClicked(message)
 
+                coroutineScope.launch {
+                    lazyListState.animateScrollToItem(chat?.messages?.lastIndex ?: 0)
+                }
+            },
+            onAttachButtonClicked = onAttachButtonClicked
+        )
+        Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM))
+    }
+}
+
+@Composable
+private fun ConversationBody(
+    modifier: Modifier = Modifier,
+    user: UserDetails,
+    chat: Chat? = null,
+    coroutineScope: CoroutineScope,
+    lazyListState: LazyListState
+) {
+    Column(modifier = modifier) {
         when (chat != null) {
             true -> {
                 LaunchedEffect(Unit) {
@@ -92,44 +124,8 @@ fun ConversationScreen(
                 }
             }
 
-            false -> {
-                Spacer(modifier = Modifier.weight(1f))
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    AnimatedLottieImage(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .size(Dimens.STUB_ANIMATED_IMAGE_SIZE),
-                        res = R.raw.image_send_first_message_anim
-                    )
-                    Text(
-                        text = stringResource(R.string.send_first_message),
-                        color = AppTheme.colors.textColorVariant,
-                        style = AppTheme.typography.labelMedium,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-            }
+            false -> NoMessagesStub(modifier = Modifier.fillMaxWidth())
         }
-
-        Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM))
-        ConversationInputSection(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Dimens.PADDING_MEDIUM_SMALLER),
-            onSendButtonClicked = { message ->
-                onSendButtonClicked(message)
-
-                coroutineScope.launch {
-                    lazyListState.animateScrollToItem(chat?.messages?.lastIndex ?: 0)
-                }
-            },
-            onAttachButtonClicked = onAttachButtonClicked
-        )
-        Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM))
     }
 }
 
