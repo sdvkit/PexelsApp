@@ -68,4 +68,6 @@ object Dimens {
     val DETAILS_BUTTON_SIZE = 40.dp
     val DETAILS_BUTTON_ICON_SIZE = 20.dp
     val DETAILS_DELETE_BUTTON_ICON_SIZE = 25.dp
+
+    val SENT_PHOTO_WIDTH = 0.65f
 }

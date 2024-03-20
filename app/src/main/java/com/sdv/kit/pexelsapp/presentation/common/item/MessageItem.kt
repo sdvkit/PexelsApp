@@ -121,7 +121,7 @@ private fun ReceivedPhotoMessageItem(
                 MessageType.LOCAL_PHOTO -> {
                     Image(
                         modifier = Modifier
-                            .fillMaxWidth(0.65f)
+                            .fillMaxWidth(Dimens.SENT_PHOTO_WIDTH)
                             .clip(AppTheme.shapes.medium),
                         bitmap = message.text.asBitmap().asImageBitmap(),
                         contentDescription = null
@@ -131,7 +131,7 @@ private fun ReceivedPhotoMessageItem(
                 MessageType.REMOTE_PHOTO -> {
                     AsyncImage(
                         modifier = Modifier
-                            .fillMaxWidth(0.65f)
+                            .fillMaxWidth(Dimens.SENT_PHOTO_WIDTH)
                             .clip(AppTheme.shapes.medium),
                         model = message.text,
                         contentDescription = null,
@@ -174,7 +174,7 @@ private fun UserSentPhotoMessageItem(
                     MessageType.LOCAL_PHOTO -> {
                         Image(
                             modifier = Modifier
-                                .fillMaxWidth(0.65f)
+                                .fillMaxWidth(Dimens.SENT_PHOTO_WIDTH)
                                 .clip(AppTheme.shapes.medium),
                             bitmap = message.text.asBitmap().asImageBitmap(),
                             contentDescription = null
@@ -184,7 +184,7 @@ private fun UserSentPhotoMessageItem(
                     MessageType.REMOTE_PHOTO -> {
                         AsyncImage(
                             modifier = Modifier
-                                .fillMaxWidth(0.65f)
+                                .fillMaxWidth(Dimens.SENT_PHOTO_WIDTH)
                                 .clip(AppTheme.shapes.medium),
                             model = message.text,
                             contentDescription = null,
