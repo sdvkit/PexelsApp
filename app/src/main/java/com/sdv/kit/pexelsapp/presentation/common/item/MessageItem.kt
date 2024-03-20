@@ -141,7 +141,7 @@ private fun ReceivedPhotoMessageItem(
                     )
                 }
 
-                else -> {}
+                else -> throw IllegalArgumentException("There's no such MessageType as ${message.messageType}")
             }
         }
     }
@@ -194,7 +194,7 @@ private fun UserSentPhotoMessageItem(
                         )
                     }
 
-                    else -> {}
+                    else -> throw IllegalArgumentException("There's no such MessageType as ${message.messageType}")
                 }
             }
         }
