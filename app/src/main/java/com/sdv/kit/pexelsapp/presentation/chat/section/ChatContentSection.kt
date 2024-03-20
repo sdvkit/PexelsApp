@@ -53,8 +53,6 @@ fun ChatContentSection(
     onAcceptRequest: (UserDetails) -> Unit,
     onAnyDetailsClicked: (UserDetails) -> Unit
 ) {
-    val searchValue = remember { mutableStateOf(TextFieldValue(text = "")) }
-
     var tabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf(R.string.chats, R.string.friends)
 
@@ -88,53 +86,20 @@ fun ChatContentSection(
                         )
                     }
                 }
-                when (tabIndex) {
-                    0 -> {
-                        Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM_SMALLER))
-
-                        if (chatDetailsList.isNotEmpty()) {
-                            SearchBar(
-                                modifier = Modifier
-                                    .heightIn(min = Dimens.SEARCH_BAR_MIN_HEIGHT)
-                                    .padding(horizontal = Dimens.PADDING_MEDIUM)
-                                    .fillMaxWidth(),
-                                value = searchValue.value,
-                                onSearch = { },
-                                onValueChange = { newSearchValue ->
-                                    searchValue.value = newSearchValue
-                                },
-                                onClear = {
-                                    searchValue.value = searchValue.value.copy(text = "")
-                                }
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM_SMALLER))
-                        ChatConversationsTabSection(
-                            modifier = Modifier.weight(1f),
-                            chatDetailsList = chatDetailsList,
-                            onAnyItemClicked = onAnyChatClicked,
-                            searchValue = searchValue.value.text,
-                            onNewChatButtonClicked = onNewChatButtonClicked
-                        )
-                    }
-
-                    1 -> {
-                        ChatRequestsTabSection(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(top = Dimens.PADDING_MEDIUM),
-                            requestedUsers = requestedUsers,
-                            receivedRequests = receivedRequests,
-                            onRemoveUserRequestClicked = onRemoveUserRequestClicked,
-                            onAcceptRequest = onAcceptRequest,
-                            onRejectRequest = onRejectRequest,
-                            onAnyFriendClicked = onAnyFriendClicked,
-                            friendsList = friendsList,
-                            onAnyDetailsClicked = onAnyDetailsClicked
-                        )
-                    }
-                }
+                ChatConversationTabsContent(
+                    tabIndex = tabIndex,
+                    friendsList = friendsList,
+                    chatDetailsList = chatDetailsList,
+                    requestedUsers = requestedUsers,
+                    receivedRequests = receivedRequests,
+                    onRemoveUserRequestClicked = onRemoveUserRequestClicked,
+                    onNewChatButtonClicked = onNewChatButtonClicked,
+                    onAnyChatClicked = onAnyChatClicked,
+                    onAnyFriendClicked = onAnyFriendClicked,
+                    onRejectRequest = onRejectRequest,
+                    onAcceptRequest = onAcceptRequest,
+                    onAnyDetailsClicked = onAnyDetailsClicked
+                )
             }
         }
         FloatingActionButton(
@@ -151,6 +116,91 @@ fun ChatContentSection(
                 contentDescription = null
             )
         }
+    }
+}
+
+@Composable
+private fun ChatConversationTabsContent(
+    modifier: Modifier = Modifier,
+    friendsList: List<UserDetails>,
+    chatDetailsList: List<ChatDetails>,
+    requestedUsers: List<UserDetails>,
+    receivedRequests: List<UserDetails>,
+    onRemoveUserRequestClicked: (UserDetails) -> Unit,
+    onNewChatButtonClicked: () -> Unit,
+    onAnyChatClicked: (ChatDetails) -> Unit,
+    onAnyFriendClicked: (UserDetails) -> Unit,
+    onRejectRequest: (UserDetails) -> Unit,
+    onAcceptRequest: (UserDetails) -> Unit,
+    onAnyDetailsClicked: (UserDetails) -> Unit,
+    tabIndex: Int
+) {
+    Column(modifier = modifier) {
+        when (tabIndex) {
+            0 -> {
+                ChatConversationsTabSectionWithSearch(
+                    chatDetailsList = chatDetailsList,
+                    onNewChatButtonClicked = onNewChatButtonClicked,
+                    onAnyChatClicked = onAnyChatClicked
+                )
+            }
+
+            1 -> {
+                ChatRequestsTabSection(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(top = Dimens.PADDING_MEDIUM),
+                    requestedUsers = requestedUsers,
+                    receivedRequests = receivedRequests,
+                    onRemoveUserRequestClicked = onRemoveUserRequestClicked,
+                    onAcceptRequest = onAcceptRequest,
+                    onRejectRequest = onRejectRequest,
+                    onAnyFriendClicked = onAnyFriendClicked,
+                    friendsList = friendsList,
+                    onAnyDetailsClicked = onAnyDetailsClicked
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChatConversationsTabSectionWithSearch(
+    modifier: Modifier = Modifier,
+    chatDetailsList: List<ChatDetails>,
+    onNewChatButtonClicked: () -> Unit,
+    onAnyChatClicked: (ChatDetails) -> Unit
+) {
+    val searchValue = remember { mutableStateOf(TextFieldValue(text = "")) }
+
+    Column(modifier = modifier) {
+        Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM_SMALLER))
+
+        if (chatDetailsList.isNotEmpty()) {
+            SearchBar(
+                modifier = Modifier
+                    .heightIn(min = Dimens.SEARCH_BAR_MIN_HEIGHT)
+                    .padding(horizontal = Dimens.PADDING_MEDIUM)
+                    .fillMaxWidth(),
+                value = searchValue.value,
+                onSearch = { },
+                onValueChange = { newSearchValue ->
+                    searchValue.value = newSearchValue
+                },
+                onClear = {
+                    searchValue.value = searchValue.value.copy(text = "")
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM_SMALLER))
+        ChatConversationsTabSection(
+            modifier = Modifier.weight(1f),
+            chatDetailsList = chatDetailsList,
+            onAnyItemClicked = onAnyChatClicked,
+            searchValue = searchValue.value.text,
+            onNewChatButtonClicked = onNewChatButtonClicked
+        )
     }
 }
 
