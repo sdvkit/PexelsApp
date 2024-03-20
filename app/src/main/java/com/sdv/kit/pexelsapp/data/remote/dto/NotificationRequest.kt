@@ -14,7 +14,7 @@ data class Notification(
 data class NotificationRequest(
 
     @SerializedName("to")
-    val to: String,
+    val targetFcmToken: String,
 
     val notification: Notification
 )

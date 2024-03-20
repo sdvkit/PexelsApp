@@ -157,7 +157,7 @@ class ConversationViewModel @Inject constructor(
                 if (currentFcmToken != userDetails.fcmToken) {
                     sendNotificationUsecase(
                         notificationRequest = NotificationRequest(
-                            to = userDetails.fcmToken,
+                            targetFcmToken = userDetails.fcmToken,
                             notification = Notification(
                                 title = sentMessage.from?.username ?: "",
                                 body = sentMessage.text
