@@ -6,7 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sdv.kit.pexelsapp.data.local.PexelsDatabaseClient
 import com.sdv.kit.pexelsapp.data.paging.mediator.SearchPhotoRemoteMediator
-import com.sdv.kit.pexelsapp.data.remote.PexelsApi
+import com.sdv.kit.pexelsapp.data.remote.api.PexelsApi
 import com.sdv.kit.pexelsapp.domain.model.Photo
 import com.sdv.kit.pexelsapp.domain.repository.PhotoRepository
 import com.sdv.kit.pexelsapp.util.Constants

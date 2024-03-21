@@ -38,4 +38,25 @@
     <string name="no_local_photos">У вас нет локальных фотографий</string>
     <string name="go_to_settings">Перейти в настройки</string>
     <string name="camera_permission_request_dialod_text">Нам нужно это разрешение чтобы делать фото</string>
+    <string name="chats">Чаты</string>
+    <string name="no_chats_stub">У вас нет чатов.</string>
+    <string name="new_chat">Новый чат</string>
+    <string name="search_users_stub">Ищите пользователей по их Почте или Имени</string>
+    <string name="search_user">Найти пользователя</string>
+    <string name="send_first_message">Отправьте первое сообщение</string>
+    <string name="start_conversation">Начать беседу</string>
+    <string name="enter_message">Введите сообщение</string>
+    <string name="delete_chat">Удалить чат</string>
+    <string name="delete_chat_description">Вы действительно хотите удалить этот чат?</string>
+    <string name="delete">Удалить</string>
+    <string name="attach_photo">Прикрепить фото</string>
+    <string name="request_sent">Запрос отправлен</string>
+    <string name="friends">Друзья</string>
+    <string name="requests">Запросы</string>
+    <string name="sent_requests">Отправленные запросы</string>
+    <string name="received_requests">Полученные запросы</string>
+    <string name="delete_friend">Удалить из друзей</string>
+    <string name="send_message">Отправить сообщение</string>
+    <string name="delete_friend_description">Вы действительно хотите удалить этого пользователя из друзей?</string>
+    <string name="no_frinends_and_requests">У вас нет друзей или запросов в друзья</string>
 </resources>

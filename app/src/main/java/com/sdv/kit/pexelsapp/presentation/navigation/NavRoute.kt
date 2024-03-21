@@ -8,6 +8,10 @@ sealed class NavRoute(val route: String) {
 
     data object BookmarksScreen : NavRoute(route = "bookmarks_screen")
 
+    data object ChatScreen : NavRoute(route = "chat_screen")
+
+    data object ConversationScreen : NavRoute(route = "chat_screen/conversation")
+
     data object ProfileScreen : NavRoute(route = "profile_screen")
 
     data object CameraScreen : NavRoute(route = "profile_screen/camera")
@@ -27,5 +31,7 @@ sealed class NavRoute(val route: String) {
         const val SELECTED_COLLECTION_ARG = "selectedCollection"
         const val PHOTO_ID_ARG = "photoId"
         const val SCREEN_FROM_ARG = "screenFrom"
+        const val CLICKED_USER_DETAILS = "clickedUserDetails"
+        const val CLICKED_CHAT_DETAILS = "clickedChatDetails"
     }
 }

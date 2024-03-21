@@ -3,7 +3,7 @@ package com.sdv.kit.pexelsapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import com.sdv.kit.pexelsapp.data.local.dao.FeaturedCollectionDao
-import com.sdv.kit.pexelsapp.data.remote.PexelsApi
+import com.sdv.kit.pexelsapp.data.remote.api.PexelsApi
 import com.sdv.kit.pexelsapp.domain.model.FeaturedCollection
 import com.sdv.kit.pexelsapp.domain.repository.FeaturedCollectionRepository
 import kotlinx.coroutines.flow.Flow

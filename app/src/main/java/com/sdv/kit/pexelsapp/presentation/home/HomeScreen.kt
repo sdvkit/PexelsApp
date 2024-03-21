@@ -217,7 +217,6 @@ private fun HomeScreenContent(
                     // todo look closer on value change
                     if (newSearchValue.text.isBlank()) {
                         onSearch(newSearchValue.text)
-                        return@SearchBar
                     }
 
                     if (selectedFeaturedCollectionIndex.intValue != Constants.EMPTY_COLLECTION_HEADER_INDEX) {

@@ -1,9 +1,11 @@
 package com.sdv.kit.pexelsapp.domain.model
 
 data class UserDetails(
-    val userId: String,
-    val username: String?,
-    val profilePictureUrl: String?,
-    val phoneNumber: String?,
-    val email: String
+    var userId: String = "",
+    var username: String? = "",
+    var profilePictureUrl: String? = "",
+    var phoneNumber: String? = "",
+    var email: String = "",
+    var fcmToken: String = "",
+    var friends: List<UserDetails> = emptyList()
 )

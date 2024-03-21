@@ -1,7 +1,8 @@
-package com.sdv.kit.pexelsapp.data.remote
+package com.sdv.kit.pexelsapp.data.remote.client
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.sdv.kit.pexelsapp.data.remote.AnnotationExclusionStrategy
 import com.sdv.kit.pexelsapp.data.remote.interceptor.RateLimitInterceptor
 import com.sdv.kit.pexelsapp.data.remote.interceptor.RequestLoggingInterceptor
 import com.sdv.kit.pexelsapp.util.Constants

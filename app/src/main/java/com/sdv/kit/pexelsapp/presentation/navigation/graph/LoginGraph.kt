@@ -80,6 +80,7 @@ fun NavGraphBuilder.loginNavGraph(
 
         if (authResult != null) {
             viewModel.startDailyCheckNotifications()
+            viewModel.saveUserDetailsInfo(userDetails = authResult ?: return@composable)
 
             navController.navigate(route = NavRoute.HomeScreen.route) {
                 popUpTo(navController.graph.id) {

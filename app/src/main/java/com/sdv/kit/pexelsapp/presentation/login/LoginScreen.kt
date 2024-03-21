@@ -71,6 +71,7 @@ private fun BodySection(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(Dimens.PADDING_MEDIUM))
         Text(
+            modifier = Modifier.padding(horizontal = Dimens.PADDING_MEDIUM),
             text = stringResource(R.string.login_description),
             color = AppTheme.colors.secondaryTextColor,
             style = AppTheme.typography.bodyLarge
